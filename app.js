@@ -2,7 +2,6 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./config/connectDb.js";
 import labRoute from "./router/lab/labTestRoute.js";
-import bodyParser from "body-parser";
 
 dotenv.config();
 const app = express();
