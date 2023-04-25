@@ -39,7 +39,7 @@ class labValidate {
       title: Joi.string().empty(),
       price: Joi.number().empty(),
       category: Joi.array().min(1).empty(),
-      discount: Joi.number(),
+      discount: Joi.number().max(100),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {

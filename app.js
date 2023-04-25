@@ -10,7 +10,8 @@ const PORT = process.env.PORT || 3000;
 const DATABASE_URL = process.env.DATABASE_URL;
 
 // Body parser
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded());
 
 // lab route
 app.use("/api/v2/lab", labRoute);
