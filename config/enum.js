@@ -1,0 +1,5 @@
+const PENDING = "PENDING"
+const COMPELETED = "COMPELETED"
+const CANCELLED = "CANCELLED"
+
+export const appoinmentEnum = [PENDING, COMPELETED, CANCELLED]

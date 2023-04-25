@@ -43,9 +43,6 @@ class labTestController {
         const newPrice = price ? price : data.price;
         const newDiscount = discount ? discount : data.discount;
         const selling_price = newPrice - newPrice * (newDiscount / 100);
-
-        console.log(`selling_price: ${selling_price}`);
-
         req.body.selling_price = selling_price;
       }
       req.body.updated_at = Date.now();
