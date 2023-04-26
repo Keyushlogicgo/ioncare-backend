@@ -27,9 +27,8 @@ class labTestAppoinmentController {
   };
   static getLabTestAppoinment = async (req, res) => {
     const { id } = req.params;
-    const { test, user, date } = req.query;
+    const { test, user, date, status } = req.query;
     const pagination = paginationFun(req.query)
-    console.log(date)
     try {
       var filter = { $match: {} }
       if (id) {
@@ -43,6 +42,9 @@ class labTestAppoinmentController {
       }
       if (date) {
         filter.$match = { ...filter.$match, date: date }
+      }
+      if (status) {
+        filter.$match = { ...filter.$match, status: status }
       }
       const result = await labAppoinmentModel.aggregate([
         filter,

@@ -34,7 +34,8 @@ class labValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await labAppoinmentModel.findOne({ start_time: req.body.start_time, test_id: req.body.test_id, date: req.body.date });
+      const { start_time, end_time, date, test_id } = req.body
+      const result = await labAppoinmentModel.findOne({ start_time: start_time, test_id: test_id, date: date, end_time: end_time });
       if (result) {
         const errorObj = {
           details: [
