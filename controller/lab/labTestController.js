@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import labModel from "../../model/lab/labModel.js";
 
@@ -16,21 +17,43 @@ class labTestController {
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "createLabTest");
     }
   };
   static getLabTest = async (req, res) => {
     const { id } = req.params;
     try {
-      var result = [];
+      var filter = { $match: {} }
       if (id) {
-        result = await labModel.findById(id);
-      } else {
-        result = await labModel.find();
+        filter.$match = { _id: new mongoose.Types.ObjectId(id) }
       }
+      const result = await labModel.aggregate([
+        filter,
+        {
+          $lookup: {
+            from: 'categories',
+            localField: 'category',
+            foreignField: '_id',
+            as: 'categoryInfo'
+          }
+        },
+        {
+          $unwind: '$categoryInfo'
+        },
+        {
+          $group: {
+            _id: '$_id',
+            title: { $first: '$title' },
+            price: { $first: '$price' },
+            selling_price: { $first: '$selling_price' },
+            discount: { $first: '$discount' },
+            category: { $push: '$categoryInfo.title' }
+          }
+        },
+      ])
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "getLabTest");
     }
   };
   static editLabTest = async (req, res) => {
@@ -55,7 +78,7 @@ class labTestController {
       );
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "editLabTest");
     }
   };
   static deleteLabTest = async (req, res) => {
@@ -64,7 +87,7 @@ class labTestController {
       await labModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "deleteLabTest");
     }
   };
 }

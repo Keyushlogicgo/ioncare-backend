@@ -5,11 +5,12 @@ import categoryModel from "../../model/category/categoryModel.js"
 class categoryController {
     static createCategory = async (req, res) => {
         try {
-            const doc = new labAppoinmentModel(req.body);
+            const doc = new categoryModel(req.body);
             const result = await doc.save();
             return successResponse(res, 201, "success", result)
         } catch (error) {
-            return errorResponse(res, 201, "error")
+            console.log(error)
+            return errorResponse(res, 400, "error", error, "createCategory")
         }
     }
     static getCategory = async (req, res) => {
@@ -21,27 +22,34 @@ class categoryController {
             } else {
                 result = await categoryModel.find();
             }
-            return successResponse(res, 201, "success", result)
+            return successResponse(res, 200, "success", result)
         } catch (error) {
-            return errorResponse(res, 201, "error")
+            return errorResponse(res, 400, "error", error, "getCategory")
         }
     }
     static deleteCategory = async (req, res) => {
         const { id } = req.params
         try {
-            await categoryModel.findByIdAndDelete(id)
-            return successResponse(res, 201, "success")
+            const result = await categoryModel.findByIdAndDelete(id)
+            return successResponse(res, 200, "success")
         } catch (error) {
-            return errorResponse(res, 201, "error")
+            return errorResponse(res, 400, "error", error, "deleteCategory")
         }
     }
-    static updateCategory = (req, res) => {
+    static updateCategory = async (req, res) => {
         const { id } = req.params
         try {
-            const result = ""
-            return successResponse(res, 201, "success", result)
+            const result = await categoryModel.findByIdAndUpdate(
+                id,
+                {
+                    $set: { title: req.body.title, updated_at: Date.now() },
+                },
+                { new: true }
+            );
+
+            return successResponse(res, 200, "success", result)
         } catch (error) {
-            return errorResponse(res, 201, "error")
+            return errorResponse(res, 400, "error", error, "updateCategory")
         }
     }
 }

@@ -6,7 +6,7 @@ const route = express.Router();
 
 route.post("/", categoryValidate.createCategory, categoryController.createCategory);
 route.get("/:id?", categoryController.getCategory);
-route.patch("/:id", categoryValidate.patchCategory, categoryController.deleteCategory);
-route.delete("/:id", categoryController.updateCategory);
+route.patch("/:id", categoryValidate.patchCategory, categoryController.updateCategory);
+route.delete("/:id", categoryController.deleteCategory);
 
 export default route;

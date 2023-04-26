@@ -14,7 +14,7 @@ class labTestAppoinmentController {
       return successResponse(res, 201, "success", result);
     } catch (error) {
       console.log("error", error)
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "createLabTestAppoinment");
     }
   };
   static getLabTestAppoinment = async (req, res) => {
@@ -29,7 +29,7 @@ class labTestAppoinmentController {
       return successResponse(res, 200, "success", result);
     } catch (error) {
       console.log("error", error)
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "getLabTestAppoinment");
     }
   };
   static deleteLabAppoinmentTest = async (req, res) => {
@@ -38,7 +38,7 @@ class labTestAppoinmentController {
       await labAppoinmentModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "deleteLabAppoinmentTest");
     }
   };
   static updateAppoinmentStatus = async (req, res) => {
@@ -51,10 +51,10 @@ class labTestAppoinmentController {
         },
         { new: true }
       );
-      
+
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error");
+      return errorResponse(res, 400, "error", error, "updateAppoinmentStatus");
     }
   };
 }
