@@ -6,7 +6,6 @@ import labAppoinmentRoute from "./router/lab/labTestAppoinmentRoute.js";
 import categoryRoute from "./router/category/categoryRoute.js";
 import { tokenValidate } from "./middleware/tokenValidate.js";
 import { roleValidate } from "./middleware/roleValidate.js";
-import { errorResponse } from "./helper/apiResponse.js";
 
 dotenv.config();
 const app = express();
@@ -25,6 +24,7 @@ app.use("/api/v2/category", tokenValidate, roleValidate, categoryRoute);
 // connect db
 connectDb(DATABASE_URL);
 
+// Server Listning 
 app.listen(PORT, () => {
   console.log(`server running on http://localhost:${PORT}`);
 });
@@ -33,9 +33,7 @@ app.listen(PORT, () => {
 // Uncaught exceptions and unhandled rejections
 process.on('uncaughtException', function (err) {
   console.error('Uncaught Exception:', err.message);
-
 });
-
 process.on('unhandledRejection', function (err) {
   console.error('Unhandled Rejection:', err.message);
 

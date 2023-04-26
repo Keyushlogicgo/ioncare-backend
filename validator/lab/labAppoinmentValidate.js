@@ -11,14 +11,15 @@ const options = {
 class labValidate {
   static createLabAppoinment = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      date: Joi.date().timestamp().required(),
+      from_date: Joi.date().timestamp().required(),
+      to_date: Joi.date().timestamp().required(),
       test_id: Joi.string().required(),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await labAppoinmentModel.findOne({ date: req.body.date, test_id: req.body.test_id });
+      const result = await labAppoinmentModel.findOne({ from_date: req.body.from_date, test_id: req.body.test_id });
       if (result) {
         const errorObj = {
           details: [

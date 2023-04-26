@@ -1,16 +1,23 @@
+import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import labAppoinmentModel from "../../model/lab/labAppoinmentModel.js";
+import labModel from "../../model/lab/labModel.js";
+import { getFullDate, getFullTime } from "../../helper/comman.js";
 
 class labTestAppoinmentController {
   static createLabTestAppoinment = async (req, res) => {
-    const { date, test_id } = req.body;
+    const { from_date, to_date, test_id } = req.body;
     try {
+      const { price } = await labModel.findById(test_id).select('price')
       const doc = new labAppoinmentModel({
-        date: date,
+        from_date: from_date,
+        to_date: to_date,
         test_id: test_id,
+        price: price,
         user_id: req.user.userId,
       });
       const result = await doc.save();
+
       return successResponse(res, 201, "success", result);
     } catch (error) {
       console.log("error", error)
@@ -19,13 +26,39 @@ class labTestAppoinmentController {
   };
   static getLabTestAppoinment = async (req, res) => {
     const { id } = req.params;
+    const { date, test } = req.query;
     try {
-      var result = [];
+      var filter = { $match: {} }
       if (id) {
-        result = await labAppoinmentModel.findById(id);
-      } else {
-        result = await labAppoinmentModel.find();
+        filter.$match = { _id: new mongoose.Types.ObjectId(id) }
+      } else if (test) {
+        filter.$match = { test_id: new mongoose.Types.ObjectId(test) }
       }
+      const result = await labAppoinmentModel.aggregate([
+        filter,
+        {
+          $lookup: {
+            from: "labtests",
+            localField: "test_id",
+            foreignField: "_id",
+            as: "labtestInfo"
+          }
+        },
+        {
+          $unwind: '$labtestInfo'
+        },
+        {
+          $group: {
+            _id: '$_id',
+            test_title: { $first: '$labtestInfo.title' },
+            test_id: { $first: '$labtestInfo._id' },
+            price: { $first: '$price' },
+            status: { $first: '$status' },
+            from_date: { $first: '$from_date' },
+            to_date: { $first: '$to_date' },
+          }
+        }
+      ])
       return successResponse(res, 200, "success", result);
     } catch (error) {
       console.log("error", error)
@@ -47,7 +80,7 @@ class labTestAppoinmentController {
       const result = await labAppoinmentModel.findByIdAndUpdate(
         id,
         {
-          $set: { stauts: req.body.status, updated_at: Date.now() },
+          $set: { status: req.body.status, updated_at: Date.now() },
         },
         { new: true }
       );
