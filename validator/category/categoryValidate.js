@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
 import categoryModel from "../../model/category/categoryModel.js";
+import { validateMsg } from "../../helper/comman.js";
 
 const options = {
   abortEarly: false,
@@ -9,7 +10,8 @@ const options = {
 class categoryValidate {
   static createCategory = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      title: Joi.string().required(),
+      title: Joi.string().required().label("title")
+        .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
@@ -33,7 +35,8 @@ class categoryValidate {
   };
   static patchCategory = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      title: Joi.string().empty(),
+      title: Joi.string().empty().label("title")
+        .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {

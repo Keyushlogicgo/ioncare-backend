@@ -3,6 +3,7 @@ import { validateResponse } from "../../helper/apiResponse.js";
 import labModel from "../../model/lab/labModel.js";
 import labAppoinmentModel from "../../model/lab/labAppoinmentModel.js";
 import { appoinmentEnum } from "../../config/enum.js";
+import { inputPattern, validateMsg } from "../../helper/comman.js";
 
 const options = {
   abortEarly: false,
@@ -11,21 +12,35 @@ const options = {
 class labValidate {
   static createLabAppoinment = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      from_date: Joi.date().timestamp().required(),
-      to_date: Joi.date().timestamp().required(),
-      test_id: Joi.string().required(),
+      start_time: Joi.string()
+        .pattern(inputPattern.time)
+        .required()
+        .label("start_time")
+        .messages(validateMsg(null, null, "string")),
+      end_time: Joi.string()
+        .pattern(inputPattern.time)
+        .required()
+        .label("end_time")
+        .messages(validateMsg(null, null, "string")),
+      date: Joi.string()
+        .pattern(inputPattern.date)
+        .required()
+        .label("date")
+        .messages(validateMsg(null, null, "string")),
+      test_id: Joi.string().required().label("test_id")
+        .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await labAppoinmentModel.findOne({ from_date: req.body.from_date, test_id: req.body.test_id });
+      const result = await labAppoinmentModel.findOne({ start_time: req.body.start_time, test_id: req.body.test_id, date: req.body.date });
       if (result) {
         const errorObj = {
           details: [
             {
               path: "date",
-              message: "this one is already exist",
+              message: "sorry, Appoinment is already taken",
             },
           ],
         };
@@ -37,7 +52,8 @@ class labValidate {
   };
   static updateAppoinmentStatus = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      status: Joi.string().valid(...appoinmentEnum),
+      status: Joi.string().valid(...appoinmentEnum).label("status")
+        .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {

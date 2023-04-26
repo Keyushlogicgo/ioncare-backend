@@ -1,4 +1,5 @@
 import { errorResponse, successResponse } from "../../helper/apiResponse.js"
+import { paginationFun } from "../../helper/comman.js";
 import categoryModel from "../../model/category/categoryModel.js"
 
 
@@ -15,14 +16,15 @@ class categoryController {
     }
     static getCategory = async (req, res) => {
         const { id } = req.params
+        const pagination = paginationFun(req.query)
         try {
             var result = [];
             if (id) {
                 result = await categoryModel.findById(id);
             } else {
-                result = await categoryModel.find();
+                result = await categoryModel.find().skip(pagination.skip).limit(pagination.limit);
             }
-            return successResponse(res, 200, "success", result)
+            return successResponse(res, 200, "success", result, result.length)
         } catch (error) {
             return errorResponse(res, 400, "error", error, "getCategory")
         }

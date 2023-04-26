@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import labModel from "../../model/lab/labModel.js";
+import { paginationFun } from "../../helper/comman.js";
 
 class labTestController {
   static createLabTest = async (req, res) => {
@@ -22,6 +23,7 @@ class labTestController {
   };
   static getLabTest = async (req, res) => {
     const { id } = req.params;
+    const pagination = paginationFun(req.query)
     try {
       var filter = { $match: {} }
       if (id) {
@@ -50,8 +52,14 @@ class labTestController {
             category: { $push: '$categoryInfo.title' }
           }
         },
+        {
+          $limit: pagination.limit
+        },
+        {
+          $skip: pagination.skip
+        },
       ])
-      return successResponse(res, 200, "success", result);
+      return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
       return errorResponse(res, 400, "error", error, "getLabTest");
     }
