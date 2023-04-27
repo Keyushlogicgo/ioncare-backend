@@ -23,42 +23,42 @@ class labTestController {
   };
   static getLabTest = async (req, res) => {
     const { id } = req.params;
-    const pagination = paginationFun(req.query)
+    const pagination = paginationFun(req.query);
     try {
-      var filter = { $match: {} }
+      var filter = { $match: {} };
       if (id) {
-        filter.$match = { _id: new mongoose.Types.ObjectId(id) }
+        filter.$match = { _id: new mongoose.Types.ObjectId(id) };
       }
       const result = await labModel.aggregate([
         filter,
         {
           $lookup: {
-            from: 'categories',
-            localField: 'category',
-            foreignField: '_id',
-            as: 'categoryInfo'
-          }
+            from: "categories",
+            localField: "category",
+            foreignField: "_id",
+            as: "categoryInfo",
+          },
         },
         {
-          $unwind: '$categoryInfo'
+          $unwind: "$categoryInfo",
         },
         {
           $group: {
-            _id: '$_id',
-            title: { $first: '$title' },
-            price: { $first: '$price' },
-            selling_price: { $first: '$selling_price' },
-            discount: { $first: '$discount' },
-            category: { $push: '$categoryInfo.title' }
-          }
+            _id: "$_id",
+            title: { $first: "$title" },
+            price: { $first: "$price" },
+            selling_price: { $first: "$selling_price" },
+            discount: { $first: "$discount" },
+            category: { $push: "$categoryInfo.title" },
+          },
         },
         {
-          $limit: pagination.limit
+          $limit: pagination.limit,
         },
         {
-          $skip: pagination.skip
+          $skip: pagination.skip,
         },
-      ])
+      ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
       return errorResponse(res, 400, "error", error, "getLabTest");

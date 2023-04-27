@@ -27,15 +27,26 @@ class labValidate {
         .required()
         .label("date")
         .messages(validateMsg(null, null, "string")),
-      test_id: Joi.string().required().label("test_id")
+      test_id: Joi.string()
+        .required()
+        .label("test_id")
+        .messages(validateMsg(null, null, "string")),
+      payment_id: Joi.string()
+        .required()
+        .label("payment_id")
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
       return validateResponse(res, error);
     } else {
-      const { start_time, end_time, date, test_id } = req.body
-      const result = await labAppoinmentModel.findOne({ start_time: start_time, test_id: test_id, date: date, end_time: end_time });
+      const { start_time, end_time, date, test_id } = req.body;
+      const result = await labAppoinmentModel.findOne({
+        start_time: start_time,
+        test_id: test_id,
+        date: date,
+        end_time: end_time,
+      });
       if (result) {
         const errorObj = {
           details: [
@@ -53,7 +64,9 @@ class labValidate {
   };
   static updateAppoinmentStatus = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      status: Joi.string().valid(...appoinmentEnum).label("status")
+      status: Joi.string()
+        .valid(...appoinmentEnum)
+        .label("status")
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);

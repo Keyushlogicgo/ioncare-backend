@@ -1,5 +1,6 @@
-const PENDING = "PENDING"
-const COMPELETED = "COMPELETED"
-const CANCELLED = "CANCELLED"
+const PENDING = "PENDING";
+const COMPELETED = "COMPELETED";
+const CANCELLED = "CANCELLED";
+const FAILED = "FAILED";
 
-export const appoinmentEnum = [PENDING, COMPELETED, CANCELLED]
+export const appoinmentEnum = [PENDING, COMPELETED, CANCELLED, FAILED];
