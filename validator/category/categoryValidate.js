@@ -10,7 +10,9 @@ const options = {
 class categoryValidate {
   static createCategory = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      title: Joi.string().required().label("title")
+      title: Joi.string()
+        .required()
+        .label("title")
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
@@ -35,7 +37,9 @@ class categoryValidate {
   };
   static patchCategory = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
-      title: Joi.string().empty().label("title")
+      title: Joi.string()
+        .empty()
+        .label("title")
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
@@ -44,15 +48,19 @@ class categoryValidate {
     } else {
       const result = await categoryModel.findOne({ title: req.body.title });
       if (result) {
-        const errorObj = {
-          details: [
-            {
-              path: "title",
-              message: "this one is already exist",
-            },
-          ],
-        };
-        return validateResponse(res, errorObj);
+        if (JSON.stringify(result._id) !== JSON.stringify(req.params.id)) {
+          const errorObj = {
+            details: [
+              {
+                path: "title",
+                message: "this one is already exist",
+              },
+            ],
+          };
+          return validateResponse(res, errorObj);
+        } else {
+          next();
+        }
       } else {
         next();
       }
