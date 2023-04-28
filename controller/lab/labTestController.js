@@ -12,7 +12,7 @@ class labTestController {
         _id: { $in: category },
       });
       const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
-      const selling_price = totalPrice * (discount / 100);
+      const selling_price = totalPrice - totalPrice * (discount / 100);
 
       const doc = new labModel({
         title: title,
@@ -79,8 +79,10 @@ class labTestController {
         const data = await labModel
           .findById(id)
           .select(["category", "discount"]);
-        const newDiscount = discount ? discount : data.discount;
-        const newcategory = category ? category : data.category;
+
+        const newDiscount = discount !== undefined ? discount : data.discount;
+
+        const newcategory = category !== undefined ? category : data.category;
         const priceData = await categoryModel.find({
           _id: { $in: newcategory },
         });

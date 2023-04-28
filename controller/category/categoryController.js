@@ -1,6 +1,7 @@
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
 import categoryModel from "../../model/category/categoryModel.js";
+import labModel from "../../model/lab/labModel.js";
 
 class categoryController {
   static createCategory = async (req, res) => {
@@ -45,11 +46,30 @@ class categoryController {
       const result = await categoryModel.findByIdAndUpdate(
         id,
         {
-          $set: { title: req.body },
+          $set: req.body,
         },
         { new: true }
       );
+      if (req.body.price) {
+        const newData = await labModel.find({
+          category: { $in: [id] },
+        });
+        for (let i = 0; i < newData.length; i++) {
+          const element = newData[i];
+          const priceData = await categoryModel.find({
+            _id: { $in: element.category },
+          });
+          const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
+          
+          const selling_price =
+            totalPrice - totalPrice * (element.discount / 100);
 
+          const newResult = await labModel.findByIdAndUpdate(element._id, {
+            $set: { price: totalPrice, selling_price: selling_price },
+          });
+          
+        }
+      }
       return successResponse(res, 200, "success", result);
     } catch (error) {
       return errorResponse(res, 400, "error", error, "updateCategory");
