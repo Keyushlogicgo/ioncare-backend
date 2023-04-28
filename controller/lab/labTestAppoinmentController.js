@@ -13,7 +13,9 @@ class labTestAppoinmentController {
   static createLabTestAppoinment = async (req, res) => {
     const { start_time, end_time, test_id, payment_id, date } = req.body;
     try {
-      const { price } = await labModel.findById(test_id).select("price");
+      const { selling_price } = await labModel
+        .findById(test_id)
+        .select("selling_price");
       const doc = new labAppoinmentModel({
         start_time: start_time,
         end_time: end_time,
@@ -26,12 +28,11 @@ class labTestAppoinmentController {
       const orderDoc = new orderModel({
         appoinment_id: result._id,
         user_id: req.user.userId,
-        amount: price,
+        amount: selling_price,
       });
       await orderDoc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      
       return errorResponse(res, 400, "error", error, "createLabTestAppoinment");
     }
   };
@@ -109,7 +110,6 @@ class labTestAppoinmentController {
       ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      
       return errorResponse(res, 400, "error", error, "getLabTestAppoinment");
     }
   };
