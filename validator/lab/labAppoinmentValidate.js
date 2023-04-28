@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
-import labModel from "../../model/lab/labModel.js";
-import labAppoinmentModel from "../../model/lab/labAppoinmentModel.js";
+import packageModel from "../../model/package/packageModel.js";
+import labAppoinmentModel from "../../model/package/labAppoinmentModel.js";
 import { appoinmentEnum } from "../../config/enum.js";
 import { inputPattern, validateMsg } from "../../helper/comman.js";
 

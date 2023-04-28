@@ -1,5 +1,5 @@
 import express from "express";
-import labTestAppoinmentController from "../../controller/lab/labTestAppoinmentController.js";
+import labTestAppoinmentController from "../../controller/package/labTestAppoinmentController.js";
 import labAppoinmentValidate from "../../validator/lab/labAppoinmentValidate.js";
 
 const route = express.Router();

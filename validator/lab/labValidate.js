@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
-import labModel from "../../model/lab/labModel.js";
+import packageModel from "../../model/package/packageModel.js";
 import { validateMsg } from "../../helper/comman.js";
 
 const options = {
@@ -29,7 +29,7 @@ class labValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await labModel.findOne({ title: req.body.title });
+      const result = await packageModel.findOne({ title: req.body.title });
       if (result) {
         const errorObj = {
           details: [
@@ -66,7 +66,7 @@ class labValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await labModel.findOne({ title: req.body.title });
+      const result = await packageModel.findOne({ title: req.body.title });
       if (result) {
         if (JSON.stringify(result._id) !== JSON.stringify(req.params.id)) {
           const errorObj = {

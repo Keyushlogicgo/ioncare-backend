@@ -1,7 +1,7 @@
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
 import categoryModel from "../../model/category/categoryModel.js";
-import labModel from "../../model/lab/labModel.js";
+import packageModel from "../../model/package/packageModel.js";
 
 class categoryController {
   static createCategory = async (req, res) => {
@@ -51,7 +51,7 @@ class categoryController {
         { new: true }
       );
       if (req.body.price) {
-        const newData = await labModel.find({
+        const newData = await packageModel.find({
           category: { $in: [id] },
         });
         for (let i = 0; i < newData.length; i++) {
@@ -64,7 +64,7 @@ class categoryController {
           const selling_price =
             totalPrice - totalPrice * (element.discount / 100);
 
-          const newResult = await labModel.findByIdAndUpdate(element._id, {
+          const newResult = await packageModel.findByIdAndUpdate(element._id, {
             $set: { price: totalPrice, selling_price: selling_price },
           });
           

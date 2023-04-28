@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const labSchema = mongoose.Schema(
+const packageSchema = mongoose.Schema(
   {
     title: { type: String, trim: true, required: true },
     price: { type: Number, required: true },
@@ -16,7 +16,7 @@ const labSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-const labModel = mongoose.model("labtest", labSchema);
+const packageModel = mongoose.model("package", packageSchema);
 
 
-export default labModel;
+export default packageModel;

@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import labAppoinmentModel from "../../model/lab/labAppoinmentModel.js";
-import labModel from "../../model/lab/labModel.js";
+import labAppoinmentModel from "../../model/package/labAppoinmentModel.js";
+import packageModel from "../../model/package/packageModel.js";
 import {
   getFullDate,
   getFullTime,
@@ -13,7 +13,7 @@ class labTestAppoinmentController {
   static createLabTestAppoinment = async (req, res) => {
     const { start_time, end_time, test_id, payment_id, date } = req.body;
     try {
-      const { selling_price } = await labModel
+      const { selling_price } = await packageModel
         .findById(test_id)
         .select("selling_price");
       const doc = new labAppoinmentModel({
@@ -67,7 +67,7 @@ class labTestAppoinmentController {
         filter,
         {
           $lookup: {
-            from: "labtests",
+            from: "packages",
             localField: "test_id",
             foreignField: "_id",
             as: "labtestInfo",

@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import labModel from "../../model/lab/labModel.js";
+import packageModel from "../../model/package/packageModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import categoryModel from "../../model/category/categoryModel.js";
 
-class labTestController {
-  static createLabTest = async (req, res) => {
+class packageController {
+  static createLabPackage = async (req, res) => {
     const { title, category, discount } = req.body;
     try {
       const priceData = await categoryModel.find({
@@ -14,7 +14,7 @@ class labTestController {
       const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
       const selling_price = totalPrice - totalPrice * (discount / 100);
 
-      const doc = new labModel({
+      const doc = new packageModel({
         title: title,
         price: totalPrice,
         category: category,
@@ -24,10 +24,10 @@ class labTestController {
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "createLabTest");
+      return errorResponse(res, 400, "error", error, "createLabPackage");
     }
   };
-  static getLabTest = async (req, res) => {
+  static getLabPackage = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
     try {
@@ -35,7 +35,7 @@ class labTestController {
       if (id) {
         filter.$match = { _id: new mongoose.Types.ObjectId(id) };
       }
-      const result = await labModel.aggregate([
+      const result = await packageModel.aggregate([
         filter,
         {
           $lookup: {
@@ -67,16 +67,16 @@ class labTestController {
       ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "getLabTest");
+      return errorResponse(res, 400, "error", error, "getLabPackage");
     }
   };
-  static editLabTest = async (req, res) => {
+  static editLabPackage = async (req, res) => {
     const { id } = req.params;
     const { discount, category } = req.body;
 
     try {
       if (category || discount) {
-        const data = await labModel
+        const data = await packageModel
           .findById(id)
           .select(["category", "discount"]);
 
@@ -93,7 +93,7 @@ class labTestController {
         req.body.selling_price = selling_price;
       }
 
-      const result = await labModel.findByIdAndUpdate(
+      const result = await packageModel.findByIdAndUpdate(
         id,
         {
           $set: req.body,
@@ -102,17 +102,17 @@ class labTestController {
       );
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "editLabTest");
+      return errorResponse(res, 400, "error", error, "editLabPackage");
     }
   };
-  static deleteLabTest = async (req, res) => {
+  static deleteLabPackage = async (req, res) => {
     const { id } = req.params;
     try {
-      await labModel.findByIdAndDelete(id);
+      await packageModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "deleteLabTest");
+      return errorResponse(res, 400, "error", error, "deleteLabPackage");
     }
   };
 }
-export default labTestController;
+export default packageController;

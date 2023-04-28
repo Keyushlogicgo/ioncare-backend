@@ -1,8 +1,8 @@
 import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./config/connectDb.js";
-import labRoute from "./router/lab/labTestRoute.js";
-import labAppoinmentRoute from "./router/lab/labTestAppoinmentRoute.js";
+import packageRoute from "./router/package/packageRoute.js";
+import labAppoinmentRoute from "./router/package/labTestAppoinmentRoute.js";
 import categoryRoute from "./router/category/categoryRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import orderRoute from "./router/order/orderRoute.js";
@@ -25,8 +25,8 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded());
 
-// lab route
-app.use("/api/v2/lab", tokenValidate, roleValidate, labRoute);
+// Routes
+app.use("/api/v2/package", tokenValidate, roleValidate, packageRoute);
 app.use(
   "/api/v2/labappoinment",
   tokenValidate,
