@@ -7,7 +7,7 @@ const orderSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "labappoinment",
-      onDelete: "cascade",
+      
     },
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     amount: { type: Number, required: true },

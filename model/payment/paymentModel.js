@@ -7,7 +7,6 @@ const paymentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "order",
-      onDelete: "cascade",
     },
     user_id: {
       type: mongoose.Schema.Types.ObjectId,

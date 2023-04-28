@@ -31,7 +31,7 @@ class labTestAppoinmentController {
       await orderDoc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      console.log("error", error);
+      
       return errorResponse(res, 400, "error", error, "createLabTestAppoinment");
     }
   };
@@ -86,7 +86,6 @@ class labTestAppoinmentController {
         {
           $unwind: "$orderInfo",
         },
-
         {
           $group: {
             _id: "$_id",
@@ -110,7 +109,7 @@ class labTestAppoinmentController {
       ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      console.log("error", error);
+      
       return errorResponse(res, 400, "error", error, "getLabTestAppoinment");
     }
   };

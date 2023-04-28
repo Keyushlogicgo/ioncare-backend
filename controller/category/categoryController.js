@@ -9,7 +9,7 @@ class categoryController {
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      console.log(error);
+      s
       return errorResponse(res, 400, "error", error, "createCategory");
     }
   };

@@ -7,7 +7,7 @@ class paymentController {
   static createPayment = async (req, res) => {
     try {
       const doc = new paymentModel(req.body);
-      console.log(doc);
+      
       const result = await doc.save();
       await orderModel.findByIdAndUpdate(result.order_id, {
         $set: { status: result.status },
