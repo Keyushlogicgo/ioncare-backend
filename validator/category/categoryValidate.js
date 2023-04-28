@@ -14,6 +14,10 @@ class categoryValidate {
         .required()
         .label("title")
         .messages(validateMsg(null, null, "string")),
+      price: Joi.number()
+        .required()
+        .label("price")
+        .messages(validateMsg(null, null, "number")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
@@ -41,6 +45,10 @@ class categoryValidate {
         .empty()
         .label("title")
         .messages(validateMsg(null, null, "string")),
+      price: Joi.number()
+        .empty()
+        .label("price")
+        .messages(validateMsg(null, null, "number")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {

@@ -14,10 +14,7 @@ class labValidate {
         .required()
         .label("title")
         .messages(validateMsg(null, null, "string")),
-      price: Joi.number()
-        .required()
-        .label("price")
-        .messages(validateMsg(null, null, "number")),
+
       category: Joi.array()
         .min(1)
         .required()
@@ -54,10 +51,7 @@ class labValidate {
         .empty()
         .label("title")
         .messages(validateMsg(null, null, "string")),
-      price: Joi.number()
-        .empty()
-        .label("price")
-        .messages(validateMsg(null, null, "number")),
+
       category: Joi.array()
         .min(1)
         .empty()

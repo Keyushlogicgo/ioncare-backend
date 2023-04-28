@@ -9,7 +9,6 @@ class categoryController {
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      s
       return errorResponse(res, 400, "error", error, "createCategory");
     }
   };
@@ -46,7 +45,7 @@ class categoryController {
       const result = await categoryModel.findByIdAndUpdate(
         id,
         {
-          $set: { title: req.body.title },
+          $set: { title: req.body },
         },
         { new: true }
       );

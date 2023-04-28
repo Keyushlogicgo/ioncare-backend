@@ -2,15 +2,21 @@ import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import labModel from "../../model/lab/labModel.js";
 import { paginationFun } from "../../helper/comman.js";
+import categoryModel from "../../model/category/categoryModel.js";
 
 class labTestController {
   static createLabTest = async (req, res) => {
-    const { title, price, category, discount } = req.body;
-    const selling_price = price * (discount / 100);
+    const { title, category, discount } = req.body;
     try {
+      const priceData = await categoryModel.find({
+        _id: { $in: category },
+      });
+      const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
+      const selling_price = totalPrice * (discount / 100);
+
       const doc = new labModel({
         title: title,
-        price: price,
+        price: totalPrice,
         category: category,
         selling_price: selling_price,
         discount: discount,
@@ -66,16 +72,25 @@ class labTestController {
   };
   static editLabTest = async (req, res) => {
     const { id } = req.params;
-    const { price, discount } = req.body;
+    const { discount, category } = req.body;
 
     try {
-      if (price !== undefined || discount !== undefined) {
-        const data = await labModel.findById(id).select(["price", "discount"]);
-        const newPrice = price ? price : data.price;
+      if (category || discount) {
+        const data = await labModel
+          .findById(id)
+          .select(["category", "discount"]);
         const newDiscount = discount ? discount : data.discount;
-        const selling_price = newPrice - newPrice * (newDiscount / 100);
+        const newcategory = category ? category : data.category;
+        const priceData = await categoryModel.find({
+          _id: { $in: newcategory },
+        });
+        const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
+        const selling_price = totalPrice - totalPrice * (newDiscount / 100);
+        req.body.discount = newDiscount;
+        req.body.price = totalPrice;
         req.body.selling_price = selling_price;
       }
+
       const result = await labModel.findByIdAndUpdate(
         id,
         {
