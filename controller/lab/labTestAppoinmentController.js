@@ -7,6 +7,7 @@ import {
   getFullTime,
   paginationFun,
 } from "../../helper/comman.js";
+import orderModel from "../../model/order/orderModel.js";
 
 class labTestAppoinmentController {
   static createLabTestAppoinment = async (req, res) => {
@@ -18,12 +19,16 @@ class labTestAppoinmentController {
         end_time: end_time,
         test_id: test_id,
         payment_id: payment_id,
-        price: price,
         date: date,
         user_id: req.user.userId,
       });
       const result = await doc.save();
-
+      const orderDoc = new orderModel({
+        appoinment_id: result._id,
+        user_id: req.user.userId,
+        amount: price,
+      });
+      await orderDoc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
       console.log("error", error);
@@ -72,28 +77,28 @@ class labTestAppoinmentController {
         },
         {
           $lookup: {
-            from: "payments",
-            localField: "payment_id",
-            foreignField: "_id",
-            as: "paymentInfo",
+            from: "orders",
+            localField: "_id",
+            foreignField: "appoinment_id",
+            as: "orderInfo",
           },
         },
         {
-          $unwind: "$paymentInfo",
+          $unwind: "$orderInfo",
         },
+
         {
           $group: {
             _id: "$_id",
             test_title: { $first: "$labtestInfo.title" },
             test_id: { $first: "$labtestInfo._id" },
-            price: { $first: "$price" },
+            order_id: { $first: "$orderInfo._id" },
+            payment_status: { $first: "$orderInfo.status" },
+            price: { $first: "$orderInfo.amount" },
             status: { $first: "$status" },
-            payment_status: { $first: "$paymentInfo.status" },
-            payment_id: { $first: "$paymentInfo.order_id" },
             start_time: { $first: "$start_time" },
             end_time: { $first: "$end_time" },
             date: { $first: "$date" },
-            create_at: { $first: "$create_at" },
           },
         },
         {
@@ -124,7 +129,7 @@ class labTestAppoinmentController {
       const result = await labAppoinmentModel.findByIdAndUpdate(
         id,
         {
-          $set: { status: req.body.status, updated_at: Date.now() },
+          $set: { status: req.body.status },
         },
         { new: true }
       );

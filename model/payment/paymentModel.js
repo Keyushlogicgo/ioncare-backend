@@ -1,18 +1,28 @@
 import mongoose from "mongoose";
 import { appoinmentEnum } from "../../config/enum.js";
 
-const paymentSchema = mongoose.Schema({
-  order_id: { type: String, required: true },
-  amount: { type: Number, required: true },
-  status: {
-    type: String,
-    default: "PENDING",
-    enum: appoinmentEnum,
+const paymentSchema = mongoose.Schema(
+  {
+    order_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "order",
+      onDelete: "cascade",
+    },
+    user_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+    },
+    transaction_id: { type: String, required: true },
+    status: {
+      type: String,
+      default: "PENDING",
+      enum: appoinmentEnum,
+    },
+    payment_method: { type: String, required: true },
   },
-  payment_method: { type: String, required: true },
-  create_at: { type: Date, default: Date.now() },
-  updated_at: { type: Date, default: Date.now() },
-});
+  { timestamps: true }
+);
 const paymentModel = mongoose.model("payment", paymentSchema);
 
 export default paymentModel;

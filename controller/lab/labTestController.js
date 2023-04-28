@@ -76,7 +76,6 @@ class labTestController {
         const selling_price = newPrice - newPrice * (newDiscount / 100);
         req.body.selling_price = selling_price;
       }
-      req.body.updated_at = Date.now();
       const result = await labModel.findByIdAndUpdate(
         id,
         {

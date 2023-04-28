@@ -5,6 +5,7 @@ import labRoute from "./router/lab/labTestRoute.js";
 import labAppoinmentRoute from "./router/lab/labTestAppoinmentRoute.js";
 import categoryRoute from "./router/category/categoryRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
+import orderRoute from "./router/order/orderRoute.js";
 import { tokenValidate } from "./middleware/tokenValidate.js";
 import { roleValidate } from "./middleware/roleValidate.js";
 import cors from "cors";
@@ -34,6 +35,7 @@ app.use(
 );
 app.use("/api/v2/category", tokenValidate, roleValidate, categoryRoute);
 app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);
+app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
 
 // connect db
 connectDb(DATABASE_URL);

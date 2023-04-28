@@ -15,6 +15,14 @@ class paymentValidate {
         .required()
         .label("order_id")
         .messages(validateMsg(null, null, "string")),
+      user_id: Joi.string()
+        .required()
+        .label("order_id")
+        .messages(validateMsg(null, null, "string")),
+      transaction_id: Joi.string()
+        .required()
+        .label("order_id")
+        .messages(validateMsg(null, null, "string")),
       amount: Joi.number()
         .empty()
         .label("amount")
