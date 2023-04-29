@@ -34,8 +34,8 @@ class labTestAppoinmentController {
   };
   static getLabTestAppoinment = async (req, res) => {
     const { id } = req.params;
-    const { test, user, date, status } = req.query;
     const pagination = paginationFun(req.query);
+    const { test, user, date, status } = req.query;
     try {
       var filter = { $match: {} };
       if (id) {
@@ -87,6 +87,7 @@ class labTestAppoinmentController {
           $group: {
             _id: "$_id",
             test_title: { $first: "$labtestInfo.title" },
+            user_id: { $first: "$user_id" },
             test_id: { $first: "$labtestInfo._id" },
             order_id: { $first: "$orderInfo._id" },
             payment_status: { $first: "$orderInfo.status" },
