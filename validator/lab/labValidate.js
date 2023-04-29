@@ -15,10 +15,10 @@ class labValidate {
         .label("title")
         .messages(validateMsg(null, null, "string")),
 
-      category: Joi.array()
+      test: Joi.array()
         .min(1)
         .required()
-        .label("category")
+        .label("test")
         .messages(validateMsg(1, null, "array")),
       discount: Joi.number()
         .max(100)
@@ -51,11 +51,10 @@ class labValidate {
         .empty()
         .label("title")
         .messages(validateMsg(null, null, "string")),
-
-      category: Joi.array()
+      test: Joi.array()
         .min(1)
         .empty()
-        .label("category")
+        .label("test")
         .messages(validateMsg(null, null, "array")),
       discount: Joi.number()
         .max(100)
@@ -67,6 +66,7 @@ class labValidate {
       return validateResponse(res, error);
     } else {
       const result = await packageModel.findOne({ title: req.body.title });
+      
       if (result) {
         if (JSON.stringify(result._id) !== JSON.stringify(req.params.id)) {
           const errorObj = {

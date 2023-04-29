@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { appoinmentEnum } from "../../config/enum.js";
 
-export const labAppoinmentSchema = mongoose.Schema(
+export const appoinmentSchema = mongoose.Schema(
   {
     start_time: { type: String, trim: true, required: true },
     end_time: { type: String, trim: true, required: true },
@@ -21,6 +21,6 @@ export const labAppoinmentSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-const labAppoinmentModel = mongoose.model("labappoinment", labAppoinmentSchema);
+const appoinmentModel = mongoose.model("appoinment", appoinmentSchema);
 
-export default labAppoinmentModel;
+export default appoinmentModel;

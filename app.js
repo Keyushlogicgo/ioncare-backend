@@ -2,8 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import { connectDb } from "./config/connectDb.js";
 import packageRoute from "./router/package/packageRoute.js";
-import labAppoinmentRoute from "./router/package/labTestAppoinmentRoute.js";
-import categoryRoute from "./router/category/categoryRoute.js";
+import appoinmentRoute from "./router/appoinment/appoinmentRoute.js";
+import testRoute from "./router/test/testRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import orderRoute from "./router/order/orderRoute.js";
 import { tokenValidate } from "./middleware/tokenValidate.js";
@@ -27,13 +27,8 @@ app.use(express.urlencoded());
 
 // Routes
 app.use("/api/v2/package", tokenValidate, roleValidate, packageRoute);
-app.use(
-  "/api/v2/labappoinment",
-  tokenValidate,
-  roleValidate,
-  labAppoinmentRoute
-);
-app.use("/api/v2/category", tokenValidate, roleValidate, categoryRoute);
+app.use("/api/v2/appoinment", tokenValidate, roleValidate, appoinmentRoute);
+app.use("/api/v2/test", tokenValidate, roleValidate, testRoute);
 app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);
 app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
 

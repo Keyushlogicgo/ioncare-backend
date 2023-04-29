@@ -1,14 +1,14 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
-import categoryModel from "../../model/category/categoryModel.js";
+import testModel from "../../model/test/testModel.js";
 import { validateMsg } from "../../helper/comman.js";
 
 const options = {
   abortEarly: false,
 };
 
-class categoryValidate {
-  static createCategory = async (req, res, next) => {
+class testValidate {
+  static createTest = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       title: Joi.string()
         .required()
@@ -23,7 +23,7 @@ class categoryValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await categoryModel.findOne({ title: req.body.title });
+      const result = await testModel.findOne({ title: req.body.title });
       if (result) {
         const errorObj = {
           details: [
@@ -39,7 +39,7 @@ class categoryValidate {
       }
     }
   };
-  static patchCategory = async (req, res, next) => {
+  static patchTest = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       title: Joi.string()
         .empty()
@@ -54,7 +54,7 @@ class categoryValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const result = await categoryModel.findOne({ title: req.body.title });
+      const result = await testModel.findOne({ title: req.body.title });
       if (result) {
         if (JSON.stringify(result._id) !== JSON.stringify(req.params.id)) {
           const errorObj = {
@@ -75,4 +75,4 @@ class categoryValidate {
     }
   };
 }
-export default categoryValidate;
+export default testValidate;

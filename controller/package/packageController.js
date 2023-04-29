@@ -2,14 +2,14 @@ import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import packageModel from "../../model/package/packageModel.js";
 import { paginationFun } from "../../helper/comman.js";
-import categoryModel from "../../model/category/categoryModel.js";
+import testModel from "../../model/test/testModel.js";
 
 class packageController {
   static createLabPackage = async (req, res) => {
-    const { title, category, discount } = req.body;
+    const { title, test, discount } = req.body;
     try {
-      const priceData = await categoryModel.find({
-        _id: { $in: category },
+      const priceData = await testModel.find({
+        _id: { $in: test },
       });
       const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
       const selling_price = totalPrice - totalPrice * (discount / 100);
@@ -17,7 +17,7 @@ class packageController {
       const doc = new packageModel({
         title: title,
         price: totalPrice,
-        category: category,
+        test: test,
         selling_price: selling_price,
         discount: discount,
       });
@@ -39,14 +39,14 @@ class packageController {
         filter,
         {
           $lookup: {
-            from: "categories",
-            localField: "category",
+            from: "tests",
+            localField: "test",
             foreignField: "_id",
-            as: "categoryInfo",
+            as: "testInfo",
           },
         },
         {
-          $unwind: "$categoryInfo",
+          $unwind: "$testInfo",
         },
         {
           $group: {
@@ -55,7 +55,7 @@ class packageController {
             price: { $first: "$price" },
             selling_price: { $first: "$selling_price" },
             discount: { $first: "$discount" },
-            category: { $push: "$categoryInfo.title" },
+            test: { $push: "$testInfo.title" },
           },
         },
         {
@@ -72,19 +72,19 @@ class packageController {
   };
   static editLabPackage = async (req, res) => {
     const { id } = req.params;
-    const { discount, category } = req.body;
+    const { discount, test } = req.body;
 
     try {
-      if (category || discount) {
+      if (test || discount || discount === 0) {
         const data = await packageModel
           .findById(id)
-          .select(["category", "discount"]);
+          .select(["test", "discount"]);
 
         const newDiscount = discount !== undefined ? discount : data.discount;
 
-        const newcategory = category !== undefined ? category : data.category;
-        const priceData = await categoryModel.find({
-          _id: { $in: newcategory },
+        const newtest = test !== undefined ? test : data.test;
+        const priceData = await testModel.find({
+          _id: { $in: newtest },
         });
         const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
         const selling_price = totalPrice - totalPrice * (newDiscount / 100);

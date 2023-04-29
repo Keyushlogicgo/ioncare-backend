@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
 import packageModel from "../../model/package/packageModel.js";
-import labAppoinmentModel from "../../model/package/labAppoinmentModel.js";
+import appoinmentModel from "../../model/appoinment/appoinmentModel.js";
 import { appoinmentEnum } from "../../config/enum.js";
 import { inputPattern, validateMsg } from "../../helper/comman.js";
 
@@ -37,7 +37,7 @@ class labValidate {
       return validateResponse(res, error);
     } else {
       const { start_time, end_time, date, test_id } = req.body;
-      const result = await labAppoinmentModel.findOne({
+      const result = await appoinmentModel.findOne({
         start_time: start_time,
         test_id: test_id,
         date: date,

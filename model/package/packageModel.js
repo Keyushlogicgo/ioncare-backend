@@ -6,10 +6,10 @@ const packageSchema = mongoose.Schema(
     price: { type: Number, required: true },
     selling_price: { type: Number, required: true, default: 0 },
     discount: { type: Number, required: true, default: 0 },
-    category: [
+    test: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "category",
+        ref: "test",
         required: true,
       },
     ],

@@ -1,12 +1,8 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import labAppoinmentModel from "../../model/package/labAppoinmentModel.js";
+import appoinmentModel from "../../model/appoinment/appoinmentModel.js";
 import packageModel from "../../model/package/packageModel.js";
-import {
-  getFullDate,
-  getFullTime,
-  paginationFun,
-} from "../../helper/comman.js";
+import { paginationFun } from "../../helper/comman.js";
 import orderModel from "../../model/order/orderModel.js";
 
 class labTestAppoinmentController {
@@ -16,7 +12,7 @@ class labTestAppoinmentController {
       const { selling_price } = await packageModel
         .findById(test_id)
         .select("selling_price");
-      const doc = new labAppoinmentModel({
+      const doc = new appoinmentModel({
         start_time: start_time,
         end_time: end_time,
         test_id: test_id,
@@ -63,7 +59,7 @@ class labTestAppoinmentController {
       if (status) {
         filter.$match = { ...filter.$match, status: status };
       }
-      const result = await labAppoinmentModel.aggregate([
+      const result = await appoinmentModel.aggregate([
         filter,
         {
           $lookup: {
@@ -116,7 +112,7 @@ class labTestAppoinmentController {
   static deleteLabAppoinmentTest = async (req, res) => {
     const { id } = req.params;
     try {
-      await labAppoinmentModel.findByIdAndDelete(id);
+      await appoinmentModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
       return errorResponse(res, 400, "error", error, "deleteLabAppoinmentTest");
@@ -125,7 +121,7 @@ class labTestAppoinmentController {
   static updateAppoinmentStatus = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await labAppoinmentModel.findByIdAndUpdate(
+      const result = await appoinmentModel.findByIdAndUpdate(
         id,
         {
           $set: { status: req.body.status },
