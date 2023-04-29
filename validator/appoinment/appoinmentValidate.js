@@ -31,7 +31,11 @@ class labValidate {
         .required()
         .label("test_id")
         .messages(validateMsg(null, null, "string")),
-      });
+      member_id: Joi.string()
+        .required()
+        .label("member_id")
+        .messages(validateMsg(null, null, "string")),
+    });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
       return validateResponse(res, error);

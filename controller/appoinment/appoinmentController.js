@@ -7,7 +7,8 @@ import orderModel from "../../model/order/orderModel.js";
 
 class labTestAppoinmentController {
   static createLabTestAppoinment = async (req, res) => {
-    const { start_time, end_time, test_id, payment_id, date } = req.body;
+    const { start_time, end_time, test_id, payment_id, date, member_id } =
+      req.body;
     try {
       const { selling_price } = await packageModel
         .findById(test_id)
@@ -19,6 +20,7 @@ class labTestAppoinmentController {
         payment_id: payment_id,
         date: date,
         user_id: req.user.userId,
+        member_id: member_id,
       });
       const result = await doc.save();
       const orderDoc = new orderModel({
@@ -35,7 +37,7 @@ class labTestAppoinmentController {
   static getLabTestAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
-    const { test, user, date, status } = req.query;
+    const { test, user, date, status, member } = req.query;
     try {
       var filter = { $match: {} };
       if (id) {
@@ -51,6 +53,12 @@ class labTestAppoinmentController {
         filter.$match = {
           ...filter.$match,
           user_id: new mongoose.Types.ObjectId(user),
+        };
+      }
+      if (member) {
+        filter.$match = {
+          ...filter.$match,
+          member_id: new mongoose.Types.ObjectId(member),
         };
       }
       if (date) {
@@ -84,9 +92,28 @@ class labTestAppoinmentController {
           $unwind: "$orderInfo",
         },
         {
+          $lookup: {
+            from: "members",
+            localField: "member_id",
+            foreignField: "_id",
+            as: "memberInfo",
+          },
+        },
+        {
+          $unwind: "$memberInfo",
+        },
+        {
           $group: {
             _id: "$_id",
             test_title: { $first: "$labtestInfo.title" },
+            member: {
+              $first: {
+                first_name: "$memberInfo.first_name",
+                last_name: "$memberInfo.last_name",
+                email: "$memberInfo.email",
+                phone: "$memberInfo.phone",
+              },
+            },
             user_id: { $first: "$user_id" },
             test_id: { $first: "$labtestInfo._id" },
             order_id: { $first: "$orderInfo._id" },

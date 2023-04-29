@@ -11,6 +11,7 @@ export const appoinmentSchema = mongoose.Schema(
       required: true,
     },
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    member_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     status: {
       type: String,
       required: true,
