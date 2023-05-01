@@ -20,6 +20,7 @@ class remarkController {
   static getRemark = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
+
     try {
       var result = [];
       if (id) {

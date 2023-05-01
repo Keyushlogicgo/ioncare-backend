@@ -13,6 +13,7 @@ import appoinmentRoute from "./router/appoinment/appoinmentRoute.js";
 import orderRoute from "./router/order/orderRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import remarkRoute from "./router/remark/remarkRoute.js";
+import cartRoute from "./router/cart/cartRoute.js";
 
 dotenv.config();
 const app = express();
@@ -37,6 +38,7 @@ app.use("/api/v2/appoinment", tokenValidate, roleValidate, appoinmentRoute);
 app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
 app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);
 app.use("/api/v2/remark", tokenValidate, roleValidate, remarkRoute);
+app.use("/api/v2/cart", tokenValidate, roleValidate, cartRoute);
 
 // connect db
 connectDb(DATABASE_URL);
