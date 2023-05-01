@@ -1,4 +1,6 @@
+import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
+import { paginationFun } from "../../helper/comman.js";
 import cartModel from "../../model/cart/cardModel.js";
 
 class cartController {
@@ -36,6 +38,44 @@ class cartController {
       return successResponse(res, 201, "success", result);
     } catch (error) {
       return errorResponse(res, 400, "error", error, "createCart");
+    }
+  };
+  static getCart = async (req, res) => {
+    try {
+      const pagination = paginationFun(req.query);
+      const result = await cartModel.aggregate([
+        {
+          $match: {
+            user_id: new mongoose.Types.ObjectId(req.user.userId),
+          },
+        },
+        {
+          $lookup: {
+            from: "tests",
+            localField: "items",
+            foreignField: "_id",
+            as: "testInfo",
+          },
+        },
+        {
+          $unwind: "$testInfo",
+        },
+        {
+          $group: {
+            _id: "$_id",
+            items: { $push: { title: "$testInfo.title", price: "$testInfo.price" } },
+          },
+        },
+        {
+          $limit: pagination.limit,
+        },
+        {
+          $skip: pagination.skip,
+        },
+      ]);
+      return successResponse(res, 201, "success", result);
+    } catch (error) {
+      return errorResponse(res, 400, "error", error, "getCart");
     }
   };
 }
