@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { appoinmentEnum } from "../../config/enum.js";
+import { statusEnum } from "../../config/enum.js";
 
 const paymentSchema = mongoose.Schema(
   {
@@ -16,7 +16,7 @@ const paymentSchema = mongoose.Schema(
     status: {
       type: String,
       default: "PENDING",
-      enum: appoinmentEnum,
+      enum: statusEnum,
     },
     payment_method: { type: String, required: true },
   },

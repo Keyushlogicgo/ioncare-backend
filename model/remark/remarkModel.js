@@ -5,7 +5,6 @@ const remarkSchema = mongoose.Schema(
     ref_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "appoinments",
     },
     written_by: {
       type: mongoose.Schema.Types.ObjectId,

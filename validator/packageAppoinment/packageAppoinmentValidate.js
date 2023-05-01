@@ -1,16 +1,15 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
-import packageModel from "../../model/package/packageModel.js";
-import appoinmentModel from "../../model/appoinment/appoinmentModel.js";
-import { appoinmentEnum } from "../../config/enum.js";
+import packageAppoinmentModel from "../../model/packageAppoinment/packageAppoinmentModel.js";
+import { statusEnum } from "../../config/enum.js";
 import { inputPattern, validateMsg } from "../../helper/comman.js";
 
 const options = {
   abortEarly: false,
 };
 
-class labValidate {
-  static createLabAppoinment = async (req, res, next) => {
+class packageAppoinmentValidate {
+  static createPackageAppoinment = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       start_time: Joi.string()
         .pattern(inputPattern.time)
@@ -41,7 +40,7 @@ class labValidate {
       return validateResponse(res, error);
     } else {
       const { start_time, end_time, date, package_id } = req.body;
-      const result = await appoinmentModel.findOne({
+      const result = await packageAppoinmentModel.findOne({
         start_time: start_time,
         package_id: package_id,
         date: date,
@@ -62,10 +61,10 @@ class labValidate {
       }
     }
   };
-  static updateAppoinmentStatus = async (req, res, next) => {
+  static updatePackageAppoinmentStatus = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       status: Joi.string()
-        .valid(...appoinmentEnum)
+        .valid(...statusEnum)
         .label("status")
         .messages(validateMsg(null, null, "string")),
     });
@@ -77,4 +76,4 @@ class labValidate {
     }
   };
 }
-export default labValidate;
+export default packageAppoinmentValidate;

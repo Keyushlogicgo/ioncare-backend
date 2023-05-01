@@ -1,20 +1,18 @@
 import mongoose from "mongoose";
-import { appoinmentEnum } from "../../config/enum.js";
+import { statusEnum } from "../../config/enum.js";
 
 const orderSchema = mongoose.Schema(
   {
     appoinment_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "appoinment",
-      
     },
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     amount: { type: Number, required: true },
     status: {
       type: String,
       default: "PENDING",
-      enum: appoinmentEnum,
+      enum: statusEnum,
     },
   },
   { timestamps: true }

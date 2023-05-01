@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import { appoinmentEnum } from "../../config/enum.js";
+import { statusEnum } from "../../config/enum.js";
 
-export const appoinmentSchema = mongoose.Schema(
+export const packageAppoinmentSchema = mongoose.Schema(
   {
     start_time: { type: String, trim: true, required: true },
     end_time: { type: String, trim: true, required: true },
@@ -15,13 +15,13 @@ export const appoinmentSchema = mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: appoinmentEnum,
+      enum: statusEnum,
       default: "PENDING",
     },
     date: { type: String, required: true },
   },
   { timestamps: true }
 );
-const appoinmentModel = mongoose.model("appoinment", appoinmentSchema);
+const packageAppoinmentModel = mongoose.model("package-appoinment", packageAppoinmentSchema);
 
-export default appoinmentModel;
+export default packageAppoinmentModel;

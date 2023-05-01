@@ -1,7 +1,7 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
 import { validateMsg } from "../../helper/comman.js";
-import { appoinmentEnum } from "../../config/enum.js";
+import { statusEnum } from "../../config/enum.js";
 import paymentModel from "../../model/payment/paymentModel.js";
 
 const options = {
@@ -28,7 +28,7 @@ class paymentValidate {
         .label("amount")
         .messages(validateMsg(null, null, "number")),
       status: Joi.string()
-        .valid(...appoinmentEnum)
+        .valid(...statusEnum)
         .label("status")
         .messages(validateMsg(null, null, "string")),
       payment_method: Joi.string()

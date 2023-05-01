@@ -1,19 +1,19 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import appoinmentModel from "../../model/appoinment/appoinmentModel.js";
+import packageAppoinmentModel from "../../model/packageAppoinment/packageAppoinmentModel.js";
 import packageModel from "../../model/package/packageModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import orderModel from "../../model/order/orderModel.js";
 
-class labTestAppoinmentController {
-  static createLabTestAppoinment = async (req, res) => {
+class packageAppoinmentController {
+  static createPackageAppoinment = async (req, res) => {
     const { start_time, end_time, package_id, payment_id, date, member_id } =
       req.body;
     try {
       const { selling_price } = await packageModel
         .findById(package_id)
         .select("selling_price");
-      const doc = new appoinmentModel({
+      const doc = new packageAppoinmentModel({
         start_time: start_time,
         end_time: end_time,
         package_id: package_id,
@@ -31,10 +31,10 @@ class labTestAppoinmentController {
       await orderDoc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "createLabTestAppoinment");
+      return errorResponse(res, 400, "error", error, "createPackageAppoinment");
     }
   };
-  static getLabTestAppoinment = async (req, res) => {
+  static getPackageAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
     const { test, user, date, status, member } = req.query;
@@ -67,7 +67,7 @@ class labTestAppoinmentController {
       if (status) {
         filter.$match = { ...filter.$match, status: status };
       }
-      const result = await appoinmentModel.aggregate([
+      const result = await packageAppoinmentModel.aggregate([
         filter,
         {
           $lookup: {
@@ -134,22 +134,22 @@ class labTestAppoinmentController {
       ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "getLabTestAppoinment");
+      return errorResponse(res, 400, "error", error, "getPackageAppoinment");
     }
   };
-  static deleteLabAppoinmentTest = async (req, res) => {
+  static deletePackageAppoinment = async (req, res) => {
     const { id } = req.params;
     try {
-      await appoinmentModel.findByIdAndDelete(id);
+      await packageAppoinmentModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "deleteLabAppoinmentTest");
+      return errorResponse(res, 400, "error", error, "deletePackageAppoinment");
     }
   };
-  static updateAppoinmentStatus = async (req, res) => {
+  static updatePackageAppoinmentStatus = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await appoinmentModel.findByIdAndUpdate(
+      const result = await packageAppoinmentModel.findByIdAndUpdate(
         id,
         {
           $set: { status: req.body.status },
@@ -159,8 +159,8 @@ class labTestAppoinmentController {
 
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "updateAppoinmentStatus");
+      return errorResponse(res, 400, "error", error, "updatePackageAppoinmentStatus");
     }
   };
 }
-export default labTestAppoinmentController;
+export default packageAppoinmentController;

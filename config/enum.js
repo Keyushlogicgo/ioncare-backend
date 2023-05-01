@@ -12,6 +12,6 @@ const BROTHER = "brother";
 const SISTER = "sister";
 const DAUGHTER = "daughter";
 
-export const appoinmentEnum = [PENDING, COMPELETED, CANCELLED, FAILED];
+export const statusEnum = [PENDING, COMPELETED, CANCELLED, FAILED];
 export const genderEnum = [MALE, FEMALE, OTHER];
 export const relationEnum = [SELF, FATHER, MOTHER, BROTHER, SISTER, DAUGHTER];

@@ -9,7 +9,7 @@ import cors from "cors";
 import memberRoute from "./router/member/memberRoute.js";
 import testRoute from "./router/test/testRoute.js";
 import packageRoute from "./router/package/packageRoute.js";
-import appoinmentRoute from "./router/appoinment/appoinmentRoute.js";
+import packageAppoinmentRoute from "./router/packageAppoinment/packageAppoinmentRoute.js";
 import orderRoute from "./router/order/orderRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import remarkRoute from "./router/remark/remarkRoute.js";
@@ -34,7 +34,12 @@ app.use(express.urlencoded());
 app.use("/api/v2/member", tokenValidate, roleValidate, memberRoute);
 app.use("/api/v2/test", tokenValidate, roleValidate, testRoute);
 app.use("/api/v2/package", tokenValidate, roleValidate, packageRoute);
-app.use("/api/v2/appoinment", tokenValidate, roleValidate, appoinmentRoute);
+app.use(
+  "/api/v2/package-appoinment",
+  tokenValidate,
+  roleValidate,
+  packageAppoinmentRoute
+);
 app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
 app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);
 app.use("/api/v2/remark", tokenValidate, roleValidate, remarkRoute);

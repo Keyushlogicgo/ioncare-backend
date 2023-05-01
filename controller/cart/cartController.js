@@ -63,7 +63,13 @@ class cartController {
         {
           $group: {
             _id: "$_id",
-            items: { $push: { title: "$testInfo.title", price: "$testInfo.price" } },
+            items: {
+              $push: {
+                id: "$testInfo._id",
+                title: "$testInfo.title",
+                price: "$testInfo.price",
+              },
+            },
           },
         },
         {
