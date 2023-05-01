@@ -7,16 +7,16 @@ import orderModel from "../../model/order/orderModel.js";
 
 class labTestAppoinmentController {
   static createLabTestAppoinment = async (req, res) => {
-    const { start_time, end_time, test_id, payment_id, date, member_id } =
+    const { start_time, end_time, package_id, payment_id, date, member_id } =
       req.body;
     try {
       const { selling_price } = await packageModel
-        .findById(test_id)
+        .findById(package_id)
         .select("selling_price");
       const doc = new appoinmentModel({
         start_time: start_time,
         end_time: end_time,
-        test_id: test_id,
+        package_id: package_id,
         payment_id: payment_id,
         date: date,
         user_id: req.user.userId,
@@ -46,7 +46,7 @@ class labTestAppoinmentController {
       if (test) {
         filter.$match = {
           ...filter.$match,
-          test_id: new mongoose.Types.ObjectId(test),
+          package_id: new mongoose.Types.ObjectId(test),
         };
       }
       if (user) {
@@ -72,7 +72,7 @@ class labTestAppoinmentController {
         {
           $lookup: {
             from: "packages",
-            localField: "test_id",
+            localField: "package_id",
             foreignField: "_id",
             as: "labtestInfo",
           },
@@ -115,7 +115,7 @@ class labTestAppoinmentController {
               },
             },
             user_id: { $first: "$user_id" },
-            test_id: { $first: "$labtestInfo._id" },
+            package_id: { $first: "$labtestInfo._id" },
             order_id: { $first: "$orderInfo._id" },
             payment_status: { $first: "$orderInfo.status" },
             price: { $first: "$orderInfo.amount" },

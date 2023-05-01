@@ -5,7 +5,7 @@ export const appoinmentSchema = mongoose.Schema(
   {
     start_time: { type: String, trim: true, required: true },
     end_time: { type: String, trim: true, required: true },
-    test_id: {
+    package_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "labtest",
       required: true,

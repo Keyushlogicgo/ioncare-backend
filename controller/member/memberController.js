@@ -1,12 +1,14 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
-import addressModel from "../../model/address/address.js";
+import addressModel from "../../model/address/addressModel.js";
 import memberModel from "../../model/member/memberModel.js";
+import { handleFile } from "../../helper/fileUploading.js";
 
 class memberController {
   static createMember = async (req, res) => {
     const {
+      image,
       email,
       first_name,
       last_name,
@@ -22,8 +24,11 @@ class memberController {
       country,
     } = req.body;
     try {
+      const image = await handleFile(image);
+      console.log(image);
       const doc = new memberModel({
         user_id: req.user.userId,
+        image: image,
         email: email,
         first_name: first_name,
         last_name: last_name,

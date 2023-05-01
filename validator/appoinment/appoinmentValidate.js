@@ -27,9 +27,9 @@ class labValidate {
         .required()
         .label("date")
         .messages(validateMsg(null, null, "string")),
-      test_id: Joi.string()
+      package_id: Joi.string()
         .required()
-        .label("test_id")
+        .label("package_id")
         .messages(validateMsg(null, null, "string")),
       member_id: Joi.string()
         .required()
@@ -40,10 +40,10 @@ class labValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const { start_time, end_time, date, test_id } = req.body;
+      const { start_time, end_time, date, package_id } = req.body;
       const result = await appoinmentModel.findOne({
         start_time: start_time,
-        test_id: test_id,
+        package_id: package_id,
         date: date,
         end_time: end_time,
       });
