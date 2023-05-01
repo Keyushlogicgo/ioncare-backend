@@ -37,17 +37,11 @@ class testAppoinmentController {
   static gettestAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
-    const { test, user, date, status, member } = req.query;
+    const {  user, date, status, member } = req.query;
     try {
       var filter = { $match: {} };
       if (id) {
         filter.$match = { _id: new mongoose.Types.ObjectId(id) };
-      }
-      if (test) {
-        filter.$match = {
-          ...filter.$match,
-          test_id: new mongoose.Types.ObjectId(test),
-        };
       }
       if (user) {
         filter.$match = {

@@ -23,12 +23,11 @@ class memberController {
       state,
       country,
     } = req.body;
-    try {
-      const image = await handleFile(image);
-      console.log(image);
+    try { 
+      const imageUrl = await handleFile(image, "profile");
       const doc = new memberModel({
         user_id: req.user.userId,
-        image: image,
+        image: imageUrl,
         email: email,
         first_name: first_name,
         last_name: last_name,
@@ -88,6 +87,7 @@ class memberController {
             email: { $first: "$email" },
             first_name: { $first: "$first_name" },
             last_name: { $first: "$last_name" },
+            image: { $first: "$image" },
             dob: { $first: "$dob" },
             age: { $first: "$age" },
             phone: { $first: "$phone" },

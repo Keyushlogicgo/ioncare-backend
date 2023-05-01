@@ -15,6 +15,7 @@ import orderRoute from "./router/order/orderRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import remarkRoute from "./router/remark/remarkRoute.js";
 import cartRoute from "./router/cart/cartRoute.js";
+import { join } from "path";
 
 dotenv.config();
 const app = express();
@@ -27,8 +28,11 @@ var corsOptions = {
 };
 app.use(cors(corsOptions));
 
+// Static
+app.use("/uploads", express.static(join(process.cwd(), "upload")));
+
 // Body parser
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded());
 
 // Routes
