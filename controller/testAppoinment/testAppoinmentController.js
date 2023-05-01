@@ -7,7 +7,8 @@ import orderModel from "../../model/order/orderModel.js";
 
 class testAppoinmentController {
   static createtestAppoinment = async (req, res) => {
-    const { start_time, end_time, test_id, date, member_id } = req.body;
+    const { start_time, end_time, test_id, date, member_id, user_id } =
+      req.body;
 
     try {
       const priceData = await testModel.find({
@@ -19,7 +20,7 @@ class testAppoinmentController {
         end_time: end_time,
         tests: test_id,
         date: date,
-        user_id: req.user.userId,
+        user_id: user_id ? user_id : req.user.userId,
         member_id: member_id,
       });
       const result = await doc.save();
@@ -37,7 +38,7 @@ class testAppoinmentController {
   static gettestAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
-    const {  user, date, status, member } = req.query;
+    const { user, date, status, member } = req.query;
     try {
       var filter = { $match: {} };
       if (id) {

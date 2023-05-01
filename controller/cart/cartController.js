@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
 import cartModel from "../../model/cart/cardModel.js";
+import testModel from "../../model/test/testModel.js";
 
 class cartController {
   static createCart = async (req, res) => {
@@ -43,6 +44,14 @@ class cartController {
   static getCart = async (req, res) => {
     try {
       const pagination = paginationFun(req.query);
+      const { items } = await cartModel
+        .findOne({ user_id: req.user.userId })
+        .select("items");
+      const priceData = await testModel.find({
+        _id: { $in: items },
+      });
+      const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
+
       const result = await cartModel.aggregate([
         {
           $match: {
@@ -63,6 +72,7 @@ class cartController {
         {
           $group: {
             _id: "$_id",
+            total: { $first: totalPrice },
             items: {
               $push: {
                 id: "$testInfo._id",

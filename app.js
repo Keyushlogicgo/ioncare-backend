@@ -1,9 +1,12 @@
 import express from "express";
 import dotenv from "dotenv";
+import { join } from "path";
+import cors from "cors";
+
+// Custom Item
 import { connectDb } from "./config/connectDb.js";
 import { tokenValidate } from "./middleware/tokenValidate.js";
 import { roleValidate } from "./middleware/roleValidate.js";
-import cors from "cors";
 
 // Router
 import memberRoute from "./router/member/memberRoute.js";
@@ -15,7 +18,7 @@ import orderRoute from "./router/order/orderRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import remarkRoute from "./router/remark/remarkRoute.js";
 import cartRoute from "./router/cart/cartRoute.js";
-import { join } from "path";
+import prescriptionRoute from "./router/prescription/prescriptionRoute.js";
 
 dotenv.config();
 const app = express();
@@ -55,6 +58,7 @@ app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
 app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);
 app.use("/api/v2/remark", tokenValidate, roleValidate, remarkRoute);
 app.use("/api/v2/cart", tokenValidate, roleValidate, cartRoute);
+app.use("/api/v2/prescription", tokenValidate, roleValidate, prescriptionRoute);
 
 // connect db
 connectDb(DATABASE_URL);
