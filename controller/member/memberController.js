@@ -3,7 +3,7 @@ import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
 import addressModel from "../../model/address/addressModel.js";
 import memberModel from "../../model/member/memberModel.js";
-import { handleFile } from "../../helper/fileUploading.js";
+import { handleFile, handleFileRemove } from "../../helper/fileUploading.js";
 
 class memberController {
   static createMember = async (req, res) => {
@@ -23,7 +23,7 @@ class memberController {
       state,
       country,
     } = req.body;
-    try { 
+    try {
       const imageUrl = await handleFile(image, "profile");
       const doc = new memberModel({
         user_id: req.user.userId,
@@ -115,6 +115,7 @@ class memberController {
   static editMember = async (req, res) => {
     const { id } = req.params;
     const {
+      image,
       email,
       first_name,
       last_name,
@@ -141,6 +142,7 @@ class memberController {
         relations
       ) {
         const memberData = await memberModel.findById(id);
+
         const updateMember = {
           email: email ? email : memberData.email,
           first_name: first_name ? first_name : memberData.first_name,
@@ -150,7 +152,14 @@ class memberController {
           phone: phone ? phone : memberData.phone,
           gender: gender ? gender : memberData.gender,
           relations: relations ? relations : memberData.relations,
+          image: memberData.image,
         };
+        if (image) {
+          const imageUrl = await handleFile(image, "profile");
+          handleFileRemove(memberData.image, "profile");
+          updateMember.image = imageUrl;
+        }
+
         await memberModel.findByIdAndUpdate(
           id,
           {

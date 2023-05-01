@@ -29,7 +29,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 // Static
-app.use("/uploads", express.static(join(process.cwd(), "upload")));
+app.use("/uploads", express.static(join(process.cwd(), "uploads")));
 
 // Body parser
 app.use(express.json({ limit: "50mb" }));
