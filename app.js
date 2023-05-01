@@ -10,6 +10,7 @@ import memberRoute from "./router/member/memberRoute.js";
 import testRoute from "./router/test/testRoute.js";
 import packageRoute from "./router/package/packageRoute.js";
 import packageAppoinmentRoute from "./router/packageAppoinment/packageAppoinmentRoute.js";
+import testAppoinmentRoute from "./router/testAppoinment/testAppoinmentRoute.js";
 import orderRoute from "./router/order/orderRoute.js";
 import paymentRoute from "./router/payment/paymentRoute.js";
 import remarkRoute from "./router/remark/remarkRoute.js";
@@ -39,6 +40,12 @@ app.use(
   tokenValidate,
   roleValidate,
   packageAppoinmentRoute
+);
+app.use(
+  "/api/v2/test-appointment",
+  tokenValidate,
+  roleValidate,
+  testAppoinmentRoute
 );
 app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
 app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);

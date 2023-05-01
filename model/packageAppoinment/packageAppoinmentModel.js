@@ -7,7 +7,7 @@ export const packageAppoinmentSchema = mongoose.Schema(
     end_time: { type: String, trim: true, required: true },
     package_id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "labtest",
+      ref: "packages",
       required: true,
     },
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
@@ -22,6 +22,9 @@ export const packageAppoinmentSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
-const packageAppoinmentModel = mongoose.model("package-appointment", packageAppoinmentSchema);
+const packageAppoinmentModel = mongoose.model(
+  "package-appointment",
+  packageAppoinmentSchema
+);
 
 export default packageAppoinmentModel;

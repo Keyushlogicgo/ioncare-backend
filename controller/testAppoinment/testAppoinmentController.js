@@ -1,21 +1,23 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import packageAppoinmentModel from "../../model/packageAppoinment/packageAppoinmentModel.js";
-import packageModel from "../../model/package/packageModel.js";
+import testAppoinmentModel from "../../model/testAppoinment/testAppoinmentModel.js";
+import testModel from "../../model/test/testModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import orderModel from "../../model/order/orderModel.js";
 
-class packageAppoinmentController {
-  static createPackageAppoinment = async (req, res) => {
-    const { start_time, end_time, package_id, date, member_id } = req.body;
+class testAppoinmentController {
+  static createtestAppoinment = async (req, res) => {
+    const { start_time, end_time, test_id, date, member_id } = req.body;
+
     try {
-      const { selling_price } = await packageModel
-        .findById(package_id)
-        .select("selling_price");
-      const doc = new packageAppoinmentModel({
+      const priceData = await testModel.find({
+        _id: { $in: test_id },
+      });
+      const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
+      const doc = new testAppoinmentModel({
         start_time: start_time,
         end_time: end_time,
-        package_id: package_id,
+        tests: test_id,
         date: date,
         user_id: req.user.userId,
         member_id: member_id,
@@ -24,15 +26,15 @@ class packageAppoinmentController {
       const orderDoc = new orderModel({
         appointment_id: result._id,
         user_id: req.user.userId,
-        amount: selling_price,
+        amount: totalPrice,
       });
       await orderDoc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "createPackageAppoinment");
+      return errorResponse(res, 400, "error", error, "createtestAppoinment");
     }
   };
-  static getPackageAppoinment = async (req, res) => {
+  static gettestAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
     const { test, user, date, status, member } = req.query;
@@ -44,7 +46,7 @@ class packageAppoinmentController {
       if (test) {
         filter.$match = {
           ...filter.$match,
-          package_id: new mongoose.Types.ObjectId(test),
+          test_id: new mongoose.Types.ObjectId(test),
         };
       }
       if (user) {
@@ -65,18 +67,18 @@ class packageAppoinmentController {
       if (status) {
         filter.$match = { ...filter.$match, status: status };
       }
-      const result = await packageAppoinmentModel.aggregate([
+      const result = await testAppoinmentModel.aggregate([
         filter,
         {
           $lookup: {
-            from: "packages",
-            localField: "package_id",
+            from: "tests",
+            localField: "tests",
             foreignField: "_id",
-            as: "labtestInfo",
+            as: "testInfo",
           },
         },
         {
-          $unwind: "$labtestInfo",
+          $unwind: "$testInfo",
         },
         {
           $lookup: {
@@ -103,16 +105,6 @@ class packageAppoinmentController {
         {
           $group: {
             _id: "$_id",
-            test_title: { $first: "$labtestInfo.title" },
-            member: {
-              $first: {
-                first_name: "$memberInfo.first_name",
-                last_name: "$memberInfo.last_name",
-                email: "$memberInfo.email",
-                phone: "$memberInfo.phone",
-              },
-            },
-            package_id: { $first: "$labtestInfo._id" },
             user_id: { $first: "$user_id" },
             order_id: { $first: "$orderInfo._id" },
             payment_status: { $first: "$orderInfo.status" },
@@ -121,6 +113,17 @@ class packageAppoinmentController {
             start_time: { $first: "$start_time" },
             end_time: { $first: "$end_time" },
             date: { $first: "$date" },
+            member: {
+              $first: {
+                first_name: "$memberInfo.first_name",
+                last_name: "$memberInfo.last_name",
+                email: "$memberInfo.email",
+                phone: "$memberInfo.phone",
+              },
+            },
+            tests: {
+              $push: "$testInfo.title",
+            },
           },
         },
         {
@@ -132,22 +135,22 @@ class packageAppoinmentController {
       ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "getPackageAppoinment");
+      return errorResponse(res, 400, "error", error, "gettestAppoinment");
     }
   };
-  static deletePackageAppoinment = async (req, res) => {
+  static deletetestAppoinment = async (req, res) => {
     const { id } = req.params;
     try {
-      await packageAppoinmentModel.findByIdAndDelete(id);
+      await testAppoinmentModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "deletePackageAppoinment");
+      return errorResponse(res, 400, "error", error, "deletetestAppoinment");
     }
   };
-  static updatePackageAppoinmentStatus = async (req, res) => {
+  static updatetestAppoinmentStatus = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await packageAppoinmentModel.findByIdAndUpdate(
+      const result = await testAppoinmentModel.findByIdAndUpdate(
         id,
         {
           $set: { status: req.body.status },
@@ -162,9 +165,9 @@ class packageAppoinmentController {
         400,
         "error",
         error,
-        "updatePackageAppoinmentStatus"
+        "updatetestAppoinmentStatus"
       );
     }
   };
 }
-export default packageAppoinmentController;
+export default testAppoinmentController;
