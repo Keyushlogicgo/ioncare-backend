@@ -141,25 +141,40 @@ class memberController {
         gender ||
         relations
       ) {
-        const memberData = await memberModel.findById(id);
-
-        const updateMember = {
-          email: email ? email : memberData.email,
-          first_name: first_name ? first_name : memberData.first_name,
-          last_name: last_name ? last_name : memberData.last_name,
-          dob: dob ? dob : memberData.dob,
-          age: age ? age : memberData.age,
-          phone: phone ? phone : memberData.phone,
-          gender: gender ? gender : memberData.gender,
-          relations: relations ? relations : memberData.relations,
-          image: memberData.image,
-        };
+        const updateMember = {};
+        if (dob) {
+          updateMember.dob = dob;
+        }
+        if (age) {
+          updateMember.age = age;
+        }
+        if (phone) {
+          updateMember.phone = phone;
+        }
+        if (gender) {
+          updateMember.gender = gender;
+        }
+        if (relations) {
+          updateMember.relations = relations;
+        }
         if (image) {
+          updateMember.image = image;
+        }
+        if (first_name) {
+          updateMember.first_name = first_name;
+        }
+        if (email) {
+          updateMember.email = email;
+        }
+        if (last_name) {
+          updateMember.last_name = last_name;
+        }
+        if (image) {
+          const memberData = await memberModel.findById(id).select("image");
           const imageUrl = await handleFile(image, "profile");
           handleFileRemove(memberData.image, "profile");
           updateMember.image = imageUrl;
         }
-
         await memberModel.findByIdAndUpdate(
           id,
           {
@@ -169,14 +184,22 @@ class memberController {
         );
       }
       if (address || area || city || state || country) {
-        const addressData = await addressModel.findOne({ ref_id: id });
-        const updateAddress = {
-          address: address ? address : addressData.address,
-          area: area ? area : addressData.area,
-          city: city ? city : addressData.city,
-          state: state ? state : addressData.state,
-          country: country ? country : addressData.country,
-        };
+        const updateAddress = {};
+        if (address) {
+          updateAddress.address = address;
+        }
+        if (area) {
+          updateAddress.area = area;
+        }
+        if (city) {
+          updateAddress.city = city;
+        }
+        if (state) {
+          updateAddress.state = state;
+        }
+        if (country) {
+          updateAddress.country = country;
+        }
         await addressModel.findOneAndUpdate(
           { ref_id: id },
           {
@@ -193,6 +216,8 @@ class memberController {
   static deleteMember = async (req, res) => {
     const { id } = req.params;
     try {
+      const { image } = await memberModel.findById(id).select("image");
+      handleFileRemove(image, "profile");
       const result = await memberModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success", result);
     } catch (error) {
