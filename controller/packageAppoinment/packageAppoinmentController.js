@@ -24,7 +24,7 @@ class packageAppoinmentController {
       });
       const result = await doc.save();
       const orderDoc = new orderModel({
-        appoinment_id: result._id,
+        appointment_id: result._id,
         user_id: req.user.userId,
         amount: selling_price,
       });
@@ -84,7 +84,7 @@ class packageAppoinmentController {
           $lookup: {
             from: "orders",
             localField: "_id",
-            foreignField: "appoinment_id",
+            foreignField: "appointment_id",
             as: "orderInfo",
           },
         },

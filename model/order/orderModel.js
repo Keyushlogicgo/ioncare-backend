@@ -3,7 +3,7 @@ import { statusEnum } from "../../config/enum.js";
 
 const orderSchema = mongoose.Schema(
   {
-    appoinment_id: {
+    appointment_id: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },

@@ -35,7 +35,7 @@ app.use("/api/v2/member", tokenValidate, roleValidate, memberRoute);
 app.use("/api/v2/test", tokenValidate, roleValidate, testRoute);
 app.use("/api/v2/package", tokenValidate, roleValidate, packageRoute);
 app.use(
-  "/api/v2/package-appoinment",
+  "/api/v2/package-appointment",
   tokenValidate,
   roleValidate,
   packageAppoinmentRoute
