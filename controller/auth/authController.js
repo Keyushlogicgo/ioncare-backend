@@ -2,6 +2,7 @@ import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import bcrypt from "bcrypt";
 import phlebotomistModel from "../../model/phlebotomist/phlebotomistModel.js";
 import jwt from "jsonwebtoken";
+import { mailTransport } from "../../config/mailTransport.js";
 
 class authController {
   static forgotPassword = async (req, res) => {
@@ -13,8 +14,20 @@ class authController {
         jwt.sign({ userId: userId }, process.env.JWT_SECRET_KEY, {
           expiresIn: "1h",
         });
-      const result = token;
-      return successResponse(res, 200, "success", result);
+      const mailHTML = `<a href=${token} target="_blank">Click here for reset password</a>`;
+      await mailTransport.sendMail({
+        from: process.env.MAIL_FROM,
+        to: req.body.email,
+        subject: "Reset Password",
+        text: mailHTML,
+      });
+
+      return successResponse(
+        res,
+        200,
+        "reset password mail send successfully",
+        result
+      );
     } catch (error) {
       return errorResponse(res, 400, "error", error, "getCart");
     }

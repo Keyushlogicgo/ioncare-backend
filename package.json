@@ -21,6 +21,7 @@
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.5",
+    "nodemailer": "^6.9.1",
     "querystring": "^0.2.1",
     "request": "^2.88.2"
   }
