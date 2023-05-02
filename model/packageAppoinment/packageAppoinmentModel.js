@@ -12,7 +12,10 @@ export const packageAppoinmentSchema = mongoose.Schema(
     },
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     member_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    phlebotomist_id: { type: mongoose.Schema.Types.ObjectId },
+    phlebotomist_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "phlebotomists",
+    },
     status: {
       type: String,
       required: true,

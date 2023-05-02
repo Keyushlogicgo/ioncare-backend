@@ -38,7 +38,7 @@ class testAppoinmentController {
   static gettestAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
-    const { user, date, status, member } = req.query;
+    const { user, date, status, member, phlebotomist } = req.query;
     try {
       var filter = { $match: {} };
       if (id) {
@@ -54,6 +54,12 @@ class testAppoinmentController {
         filter.$match = {
           ...filter.$match,
           member_id: new mongoose.Types.ObjectId(member),
+        };
+      }
+      if (phlebotomist) {
+        filter.$match = {
+          ...filter.$match,
+          phlebotomist_id: new mongoose.Types.ObjectId(phlebotomist),
         };
       }
       if (date) {
@@ -148,7 +154,7 @@ class testAppoinmentController {
       const result = await testAppoinmentModel.findByIdAndUpdate(
         id,
         {
-          $set: { status: req.body.status },
+          $set: req.body,
         },
         { new: true }
       );

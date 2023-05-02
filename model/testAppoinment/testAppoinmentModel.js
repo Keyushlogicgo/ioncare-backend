@@ -13,8 +13,15 @@ export const testAppoinmentSchema = mongoose.Schema(
       },
     ],
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    member_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    phlebotomist_id: { type: mongoose.Schema.Types.ObjectId },
+    member_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "members",
+    },
+    phlebotomist_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "phlebotomists",
+    },
     status: {
       type: String,
       required: true,

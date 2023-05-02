@@ -65,7 +65,12 @@ class testAppoinmentValidate {
     const validateSchema = Joi.object().keys({
       status: Joi.string()
         .valid(...statusEnum)
+        .empty()
         .label("status")
+        .messages(validateMsg(null, null, "string")),
+      phlebotomist_id: Joi.string()
+        .empty()
+        .label("phlebotomist_id")
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
