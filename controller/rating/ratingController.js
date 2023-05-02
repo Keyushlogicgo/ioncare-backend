@@ -1,48 +1,48 @@
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
-import remarkModel from "../../model/remark/remarkModel.js";
+import ratingModel from "../../model/rating/ratingModel.js";
 
-class remarkController {
-  static createRemark = async (req, res) => {
-    const { ref_id, message } = req.body;
+class ratingController {
+  static createRating = async (req, res) => {
+    const { rating, message, ref_id } = req.body;
     try {
-      const doc = new remarkModel({
-        ref_id: ref_id,
+      const doc = new ratingModel({
+        rating: rating,
         message: message,
         written_by: req.user.userId,
+        ref_id: ref_id,
       });
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "createRemark");
+      return errorResponse(res, 400, "error", error, "createRating");
     }
   };
-  static getRemark = async (req, res) => {
+  static getRating = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
-
     try {
       var result = [];
       if (id) {
-        result = await remarkModel
+        result = await ratingModel
           .find({ ref_id: id })
           .skip(pagination.skip)
           .limit(pagination.limit);
       } else {
-        result = await remarkModel
+        result = await ratingModel
           .find()
           .skip(pagination.skip)
-          .limit(pagination.limit);
+          .limit(pagination.limit);1
       }
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "getRemark");
+      return errorResponse(res, 400, "error", error, "getRating");
     }
   };
-  static editRemark = async (req, res) => {
+  static editRating = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await remarkModel.findByIdAndUpdate(
+      const result = await ratingModel.findByIdAndUpdate(
         id,
         {
           $set: req.body,
@@ -51,17 +51,17 @@ class remarkController {
       );
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "editRemark");
+      return errorResponse(res, 400, "error", error, "editRating");
     }
   };
-  static deleteRemark = async (req, res) => {
+  static deleteRating = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await remarkModel.findByIdAndDelete(id);
+      const result = await ratingModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "deleteRemark");
+      return errorResponse(res, 400, "error", error, "deleteRating");
     }
   };
 }
-export default remarkController;
+export default ratingController;

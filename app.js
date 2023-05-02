@@ -9,17 +9,7 @@ import { tokenValidate } from "./middleware/tokenValidate.js";
 import { roleValidate } from "./middleware/roleValidate.js";
 
 // Router
-import memberRoute from "./router/member/memberRoute.js";
-import phlebotomistRoute from "./router/phlebotomist/phlebotomistRoute.js";
-import testRoute from "./router/test/testRoute.js";
-import packageRoute from "./router/package/packageRoute.js";
-import packageAppoinmentRoute from "./router/packageAppoinment/packageAppoinmentRoute.js";
-import testAppoinmentRoute from "./router/testAppoinment/testAppoinmentRoute.js";
-import orderRoute from "./router/order/orderRoute.js";
-import paymentRoute from "./router/payment/paymentRoute.js";
-import remarkRoute from "./router/remark/remarkRoute.js";
-import cartRoute from "./router/cart/cartRoute.js";
-import prescriptionRoute from "./router/prescription/prescriptionRoute.js";
+import * as route from "./router/index.js";
 
 dotenv.config();
 const app = express();
@@ -40,27 +30,38 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded());
 
 // Routes
-app.use("/api/v2/phlebotomist", tokenValidate, roleValidate, phlebotomistRoute);
-app.use("/api/v2/member", tokenValidate, roleValidate, memberRoute);
-app.use("/api/v2/test", tokenValidate, roleValidate, testRoute);
-app.use("/api/v2/package", tokenValidate, roleValidate, packageRoute);
+app.use(
+  "/api/v2/phlebotomist",
+  tokenValidate,
+  roleValidate,
+  route.phlebotomistRoute
+);
 app.use(
   "/api/v2/package-appointment",
   tokenValidate,
   roleValidate,
-  packageAppoinmentRoute
+  route.packageAppoinmentRoute
 );
 app.use(
   "/api/v2/test-appointment",
   tokenValidate,
   roleValidate,
-  testAppoinmentRoute
+  route.testAppoinmentRoute
 );
-app.use("/api/v2/order", tokenValidate, roleValidate, orderRoute);
-app.use("/api/v2/payment", tokenValidate, roleValidate, paymentRoute);
-app.use("/api/v2/remark", tokenValidate, roleValidate, remarkRoute);
-app.use("/api/v2/cart", tokenValidate, roleValidate, cartRoute);
-app.use("/api/v2/prescription", tokenValidate, roleValidate, prescriptionRoute);
+app.use(
+  "/api/v2/prescription",
+  tokenValidate,
+  roleValidate,
+  route.prescriptionRoute
+);
+app.use("/api/v2/member", tokenValidate, roleValidate, route.memberRoute);
+app.use("/api/v2/test", tokenValidate, roleValidate, route.testRoute);
+app.use("/api/v2/package", tokenValidate, roleValidate, route.packageRoute);
+app.use("/api/v2/order", tokenValidate, roleValidate, route.orderRoute);
+app.use("/api/v2/payment", tokenValidate, roleValidate, route.paymentRoute);
+app.use("/api/v2/remark", tokenValidate, roleValidate, route.remarkRoute);
+app.use("/api/v2/rating", tokenValidate, roleValidate, route.ratingRoute);
+app.use("/api/v2/cart", tokenValidate, roleValidate, route.cartRoute);
 
 // connect db
 connectDb(DATABASE_URL);
