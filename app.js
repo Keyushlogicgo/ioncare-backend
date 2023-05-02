@@ -10,6 +10,7 @@ import { roleValidate } from "./middleware/roleValidate.js";
 
 // Router
 import memberRoute from "./router/member/memberRoute.js";
+import phlebotomistRoute from "./router/phlebotomist/phlebotomistRoute.js";
 import testRoute from "./router/test/testRoute.js";
 import packageRoute from "./router/package/packageRoute.js";
 import packageAppoinmentRoute from "./router/packageAppoinment/packageAppoinmentRoute.js";
@@ -39,6 +40,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded());
 
 // Routes
+app.use("/api/v2/phlebotomist", tokenValidate, roleValidate, phlebotomistRoute);
 app.use("/api/v2/member", tokenValidate, roleValidate, memberRoute);
 app.use("/api/v2/test", tokenValidate, roleValidate, testRoute);
 app.use("/api/v2/package", tokenValidate, roleValidate, packageRoute);

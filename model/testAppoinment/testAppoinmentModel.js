@@ -14,6 +14,7 @@ export const testAppoinmentSchema = mongoose.Schema(
     ],
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
     member_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+    phlebotomist_id: { type: mongoose.Schema.Types.ObjectId },
     status: {
       type: String,
       required: true,
