@@ -26,7 +26,7 @@ class testAppoinmentController {
       const result = await doc.save();
       const orderDoc = new orderModel({
         appointment_id: result._id,
-        user_id: req.user.userId,
+        user_id: user_id ? user_id : req.user.userId,
         amount: totalPrice,
       });
       await orderDoc.save();
