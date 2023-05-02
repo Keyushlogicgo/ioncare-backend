@@ -62,6 +62,7 @@ app.use("/api/v2/payment", tokenValidate, roleValidate, route.paymentRoute);
 app.use("/api/v2/remark", tokenValidate, roleValidate, route.remarkRoute);
 app.use("/api/v2/rating", tokenValidate, roleValidate, route.ratingRoute);
 app.use("/api/v2/cart", tokenValidate, roleValidate, route.cartRoute);
+app.use("/api/v2/auth", route.authRoute);
 
 // connect db
 connectDb(DATABASE_URL);

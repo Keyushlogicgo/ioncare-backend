@@ -10,6 +10,7 @@ import remarkRoute from "./remark/remarkRoute.js";
 import cartRoute from "./cart/cartRoute.js";
 import prescriptionRoute from "./prescription/prescriptionRoute.js";
 import ratingRoute from "./rating/ratingRoute.js";
+import authRoute from "./auth/authRoute.js";
 
 export {
   memberRoute,
@@ -24,4 +25,5 @@ export {
   cartRoute,
   prescriptionRoute,
   ratingRoute,
+  authRoute,
 };
