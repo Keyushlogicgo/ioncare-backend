@@ -1,16 +1,21 @@
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
-import { handleFile, handleFileRemove } from "../../helper/fileUploading.js";
+import {
+  handleFile,
+  handleFileRemove,
+  handleMultiFile,
+} from "../../helper/fileUploading.js";
 import prescriptionModel from "../../model/prescription/prescriptionModel.js";
 
 class prescriptionController {
   static createPrescription = async (req, res) => {
-    const { image } = req.body;
+    const { image, phone } = req.body;
     try {
-      const imageUrl = await handleFile(image, "prescription");
+      const imageUrl = await handleMultiFile(image, "prescription");
       const doc = new prescriptionModel({
         user_id: req.user.userId,
         image: imageUrl,
+        phone: phone,
       });
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
@@ -27,10 +32,21 @@ class prescriptionController {
       if (id) {
         result = await prescriptionModel.findById(id);
       } else if (user) {
-        result = await prescriptionModel
+        const userData = await prescriptionModel
           .find({ user_id: user })
           .skip(pagination.skip)
-          .limit(pagination.limit);
+          .limit(pagination.limit)
+          .select(["user_id", "image"]);
+
+        if (userData.length !== 0) {
+          result = userData?.reduce((accumulator, currentObject) => {
+            console.log("accumulator.image", accumulator.image);
+            accumulator.image.push(...currentObject.image);
+            return accumulator;
+          });
+        } else {
+          result = userData;
+        }
       } else {
         result = await prescriptionModel
           .find()
@@ -42,25 +58,7 @@ class prescriptionController {
       return errorResponse(res, 400, "error", error, "getCategory");
     }
   };
-  static editPrescription = async (req, res) => {
-    const { id } = req.params;
-    try {
-      const imageData = await prescriptionModel.findById(id).select("image");
-      handleFileRemove(imageData.image, "prescription");
-      const imageUrl = await handleFile(req.body.image, "prescription");
 
-      const result = await prescriptionModel.findByIdAndUpdate(
-        id,
-        {
-          $set: { image: imageUrl },
-        },
-        { new: true }
-      );
-      return successResponse(res, 200, "success", result);
-    } catch (error) {
-      return errorResponse(res, 400, "error", error, "editPrescription");
-    }
-  };
   static deletePrescription = async (req, res) => {
     const { id } = req.params;
     try {

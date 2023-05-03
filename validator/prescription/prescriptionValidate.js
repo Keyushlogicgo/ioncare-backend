@@ -10,27 +10,17 @@ class prescriptionValidate {
   static createPrescription = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       user_id: Joi.string()
-
         .label("user_id")
         .messages(validateMsg(null, null, "string")),
-        image: Joi.string()
+      phone: Joi.number()
+        .label("phone")
         .required()
+        .messages(validateMsg(null, null, "string")),
+      image: Joi.array()
+        .required()
+        .min(1)
         .label("image")
-        .messages(validateMsg(null, null, "string")),
-    });
-    const { error } = validateSchema.validate(req.body, options);
-    if (error) {
-      return validateResponse(res, error);
-    } else {
-      next();
-    }
-  };
-  static editPrescription = async (req, res, next) => {
-    const validateSchema = Joi.object().keys({
-      image: Joi.string()
-        .empty()
-        .label("image ")
-        .messages(validateMsg(null, null, "string")),
+        .messages(validateMsg(1, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {
