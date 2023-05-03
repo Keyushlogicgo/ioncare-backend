@@ -15,12 +15,12 @@ class prescriptionValidate {
       phone: Joi.number()
         .label("phone")
         .required()
-        .messages(validateMsg(null, null, "string")),
-      image: Joi.array()
+        .messages(validateMsg(null, null, "number")),
+      images: Joi.array()
         .required()
         .min(1)
-        .label("image")
-        .messages(validateMsg(1, null, "string")),
+        .label("images")
+        .messages(validateMsg(1, null, "array")),
     });
     const { error } = validateSchema.validate(req.body, options);
     if (error) {

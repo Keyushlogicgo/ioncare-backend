@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import { paginationFun } from "../../helper/comman.js";
 import {
@@ -9,12 +10,11 @@ import prescriptionModel from "../../model/prescription/prescriptionModel.js";
 
 class prescriptionController {
   static createPrescription = async (req, res) => {
-    const { image, phone } = req.body;
+    const { images, phone } = req.body;
     try {
-      const imageUrl = await handleMultiFile(image, "prescription");
       const doc = new prescriptionModel({
         user_id: req.user.userId,
-        image: imageUrl,
+        images: images,
         phone: phone,
       });
       const result = await doc.save();
@@ -25,37 +25,51 @@ class prescriptionController {
   };
   static getPrescription = async (req, res) => {
     const { id } = req.params;
-    const { user } = req.query;
     const pagination = paginationFun(req.query);
+    const { user } = req.query;
     try {
-      var result = [];
+      var filter = { $match: {} };
       if (id) {
-        result = await prescriptionModel.findById(id);
-      } else if (user) {
-        const userData = await prescriptionModel
-          .find({ user_id: user })
-          .skip(pagination.skip)
-          .limit(pagination.limit)
-          .select(["user_id", "image"]);
-
-        if (userData.length !== 0) {
-          result = userData?.reduce((accumulator, currentObject) => {
-            console.log("accumulator.image", accumulator.image);
-            accumulator.image.push(...currentObject.image);
-            return accumulator;
-          });
-        } else {
-          result = userData;
-        }
-      } else {
-        result = await prescriptionModel
-          .find()
-          .skip(pagination.skip)
-          .limit(pagination.limit);
+        filter.$match = { _id: new mongoose.Types.ObjectId(id) };
       }
+      if (user) {
+        filter.$match = { user_id: new mongoose.Types.ObjectId(user) };
+      }
+      const result = await prescriptionModel.aggregate([
+        filter,
+        {
+          $lookup: {
+            from: "prescriptionimages",
+            localField: "images",
+            foreignField: "_id",
+            as: "imageInfo",
+          },
+        },
+        {
+          $unwind: "$imageInfo",
+        },
+
+        {
+          $group: {
+            _id: "$_id",
+            phone: {
+              $first: "$phone",
+            },
+            image: {
+              $push: "$imageInfo.image",
+            },
+          },
+        },
+        {
+          $limit: pagination.limit,
+        },
+        {
+          $skip: pagination.skip,
+        },
+      ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "getCategory");
+      return errorResponse(res, 400, "error", error, "getLabPackage");
     }
   };
 

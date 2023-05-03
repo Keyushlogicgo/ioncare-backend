@@ -9,6 +9,7 @@ import paymentRoute from "./payment/paymentRoute.js";
 import remarkRoute from "./remark/remarkRoute.js";
 import cartRoute from "./cart/cartRoute.js";
 import prescriptionRoute from "./prescription/prescriptionRoute.js";
+import prescriptionImageRoute from "./prescriptionImage/prescriptionImageRoute.js";
 import ratingRoute from "./rating/ratingRoute.js";
 import authRoute from "./auth/authRoute.js";
 
@@ -24,6 +25,7 @@ export {
   remarkRoute,
   cartRoute,
   prescriptionRoute,
+  prescriptionImageRoute,
   ratingRoute,
   authRoute,
 };

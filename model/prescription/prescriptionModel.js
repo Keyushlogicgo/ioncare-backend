@@ -6,7 +6,13 @@ const prescriptionSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
-    image: [{ type: String, required: true }],
+    images: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "prescriptionimages",
+      },
+    ],
     phone: { type: Number, required: true },
   },
   { timestamps: true }

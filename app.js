@@ -54,6 +54,12 @@ app.use(
   roleValidate,
   route.prescriptionRoute
 );
+app.use(
+  "/api/v2/prescription-image",
+  tokenValidate,
+  roleValidate,
+  route.prescriptionImageRoute
+);
 app.use("/api/v2/member", tokenValidate, roleValidate, route.memberRoute);
 app.use("/api/v2/test", tokenValidate, roleValidate, route.testRoute);
 app.use("/api/v2/package", tokenValidate, roleValidate, route.packageRoute);
