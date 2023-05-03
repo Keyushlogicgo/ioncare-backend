@@ -3,23 +3,29 @@ import { errorResponse, successResponse } from "../../helper/apiResponse.js";
 import packageModel from "../../model/package/packageModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import testModel from "../../model/test/testModel.js";
+import { handleFile, handleFileRemove } from "../../helper/fileUploading.js";
 
 class packageController {
   static createLabPackage = async (req, res) => {
-    const { title, test, discount } = req.body;
+    const { title, test, discount, image, background, note, description } =
+      req.body;
     try {
       const priceData = await testModel.find({
         _id: { $in: test },
       });
       const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
       const selling_price = totalPrice - totalPrice * (discount / 100);
-
+      const imageUrl = await handleFile(image, "package");
       const doc = new packageModel({
         title: title,
         price: totalPrice,
         test: test,
         selling_price: selling_price,
         discount: discount,
+        description: description,
+        background: background,
+        note: note,
+        image: imageUrl,
       });
       const result = await doc.save();
       return successResponse(res, 201, "success", result);
@@ -52,9 +58,13 @@ class packageController {
           $group: {
             _id: "$_id",
             title: { $first: "$title" },
+            description: { $first: "$description" },
+            background: { $first: "$background" },
             price: { $first: "$price" },
             selling_price: { $first: "$selling_price" },
             discount: { $first: "$discount" },
+            image: { $first: "$image" },
+            note: { $first: "$note" },
             test: { $push: "$testInfo.title" },
           },
         },
@@ -72,7 +82,7 @@ class packageController {
   };
   static editLabPackage = async (req, res) => {
     const { id } = req.params;
-    const { discount, test } = req.body;
+    const { discount, test, image } = req.body;
 
     try {
       if (test || discount || discount === 0) {
@@ -92,7 +102,12 @@ class packageController {
         req.body.price = totalPrice;
         req.body.selling_price = selling_price;
       }
-
+      if (image) {
+        const packageData = await packageModel.findById(id).select("image");
+        const imageUrl = await handleFile(image, "package");
+        handleFileRemove(packageData.image, "package");
+        req.body.image = imageUrl;
+      }
       const result = await packageModel.findByIdAndUpdate(
         id,
         {
@@ -108,6 +123,8 @@ class packageController {
   static deleteLabPackage = async (req, res) => {
     const { id } = req.params;
     try {
+      const { image } = await packageModel.findById(id);
+      handleFileRemove(image, "package");
       await packageModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {

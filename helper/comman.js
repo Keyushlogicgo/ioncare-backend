@@ -18,6 +18,7 @@ export const paginationFun = (data) => {
 export const inputPattern = {
   time: /^([01]\d|2[0-3]):[0-5]\d(?:AM|PM)$/,
   date: /^([0-2]\d|3[01])-(0\d|1[0-2])-20\d{2}$/,
+  color: /^#[A-Fa-f0-9]{6}/,
 };
 export const validateMsg = (min, max, type) => {
   switch (type) {
