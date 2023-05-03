@@ -33,6 +33,7 @@ class authValidate {
         };
         return validateResponse(res, errorObj);
       } else {
+        req.user = user;
         next();
       }
     }

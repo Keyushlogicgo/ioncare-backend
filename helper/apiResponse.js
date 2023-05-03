@@ -19,7 +19,7 @@ export const errorResponse = (res, statusCode, message, err, funName) => {
 };
 export const validateResponse = (res, error) => {
   var arrOjb = { message: "error" };
-  error.details.map((item, key) => {
+  error.details.map((item) => {
     const { path, message } = item;
     arrOjb = { ...arrOjb, [path]: message };
   });

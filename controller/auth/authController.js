@@ -7,6 +7,8 @@ import { mailTransport } from "../../config/mailTransport.js";
 class authController {
   static forgotPassword = async (req, res) => {
     try {
+      const { first_name, last_name } = req.user;
+
       const userId = "64509b1a01003ba85cbf437b" || req.user.userId;
       const token =
         process.env.SERVER_BASE_URL +
@@ -14,20 +16,24 @@ class authController {
         jwt.sign({ userId: userId }, process.env.JWT_SECRET_KEY, {
           expiresIn: "1h",
         });
-      const mailHTML = `<a href=${token} target="_blank">Click here for reset password</a>`;
-      await mailTransport.sendMail({
-        from: process.env.MAIL_FROM,
-        to: req.body.email,
-        subject: "Reset Password",
-        text: mailHTML,
-      });
-
-      return successResponse(
-        res,
-        200,
-        "reset password mail send successfully",
-        result
+      const mailHTML = `<h1>${
+        first_name + last_name
+      }</h1><a href=${token} target="_blank">Click here for reset password</a>`;
+      await mailTransport.sendMail(
+        {
+          from: process.env.MAIL_FROM,
+          to: req.body.email,
+          subject: "Reset Password",
+          text: mailHTML,
+        },
+        (err, info) => {
+          if (err) {
+            console.log("Error occurred. " + err.message);
+          }
+        }
       );
+
+      return successResponse(res, 200, "reset password mail send successfully");
     } catch (error) {
       return errorResponse(res, 400, "error", error, "getCart");
     }
