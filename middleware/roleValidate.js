@@ -1,4 +1,3 @@
-import { allowRole } from "../helper/allowRole.js";
 import { validateResponse } from "../helper/apiResponse.js";
 
 const ADMIN = "ADMIN";
