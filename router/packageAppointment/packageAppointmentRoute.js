@@ -1,20 +1,20 @@
 import express from "express";
-import packageAppoinmentController from "../../controller/packageAppointment/packageAppointmentController.js";
-import packageAppoinmentValidate from "../../validator/packageAppointment/packageAppointmentValidate.js";
+import packageAppointmentController from "../../controller/packageAppointment/packageAppointmentController.js";
+import packageAppointmentValidate from "../../validator/packageAppointment/packageAppointmentValidate.js";
 
 const route = express.Router();
 
 route.post(
   "/",
-  packageAppoinmentValidate.createPackageAppoinment,
-  packageAppoinmentController.createPackageAppoinment
+  packageAppointmentValidate.createPackageAppointment,
+  packageAppointmentController.createPackageAppointment
 );
-route.get("/:id?", packageAppoinmentController.getPackageAppoinment);
-route.delete("/:id", packageAppoinmentController.deletePackageAppoinment);
+route.get("/:id?", packageAppointmentController.getPackageAppointment);
+route.delete("/:id", packageAppointmentController.deletePackageAppointment);
 route.patch(
   "/:id",
-  packageAppoinmentValidate.updatePackageAppoinmentStatus,
-  packageAppoinmentController.updatePackageAppoinmentStatus
+  packageAppointmentValidate.updatePackageAppointmentStatus,
+  packageAppointmentController.updatePackageAppointmentStatus
 );
 
 export default route;

@@ -1,18 +1,20 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import packageAppoinmentModel from "../../model/packageAppointment/packageAppointmentModel.js";
+import packageAppointmentModel from "../../model/packageAppointment/packageAppointmentModel.js";
 import packageModel from "../../model/package/packageModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import orderModel from "../../model/order/orderModel.js";
 
-class packageAppoinmentController {
-  static createPackageAppoinment = async (req, res) => {
+class packageAppointmentController {
+  static createPackageAppointment = async (req, res) => {
     const { start_time, end_time, package_id, date, member_id } = req.body;
+
     try {
       const { selling_price } = await packageModel
         .findById(package_id)
         .select("selling_price");
-      const doc = new packageAppoinmentModel({
+
+      const doc = new packageAppointmentModel({
         start_time: start_time,
         end_time: end_time,
         package_id: package_id,
@@ -29,10 +31,16 @@ class packageAppoinmentController {
       await orderDoc.save();
       return successResponse(res, 201, "success", result);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "createPackageAppoinment");
+      return errorResponse(
+        res,
+        400,
+        "error",
+        error,
+        "createPackageAppointment"
+      );
     }
   };
-  static getPackageAppoinment = async (req, res) => {
+  static getPackageAppointment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
     const {
@@ -78,7 +86,7 @@ class packageAppoinmentController {
       if (status) {
         filter.$match = { ...filter.$match, status: status };
       }
-      const result = await packageAppoinmentModel.aggregate([
+      const result = await packageAppointmentModel.aggregate([
         filter,
         {
           $lookup: {
@@ -146,22 +154,28 @@ class packageAppoinmentController {
       ]);
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "getPackageAppoinment");
+      return errorResponse(res, 400, "error", error, "getPackageAppointment");
     }
   };
-  static deletePackageAppoinment = async (req, res) => {
+  static deletePackageAppointment = async (req, res) => {
     const { id } = req.params;
     try {
-      await packageAppoinmentModel.findByIdAndDelete(id);
+      await packageAppointmentModel.findByIdAndDelete(id);
       return successResponse(res, 200, "success");
     } catch (error) {
-      return errorResponse(res, 400, "error", error, "deletePackageAppoinment");
+      return errorResponse(
+        res,
+        400,
+        "error",
+        error,
+        "deletePackageAppointment"
+      );
     }
   };
-  static updatePackageAppoinmentStatus = async (req, res) => {
+  static updatePackageAppointmentStatus = async (req, res) => {
     const { id } = req.params;
     try {
-      const result = await packageAppoinmentModel.findByIdAndUpdate(
+      const result = await packageAppointmentModel.findByIdAndUpdate(
         id,
         {
           $set: req.body,
@@ -176,9 +190,9 @@ class packageAppoinmentController {
         400,
         "error",
         error,
-        "updatePackageAppoinmentStatus"
+        "updatePackageAppointmentStatus"
       );
     }
   };
 }
-export default packageAppoinmentController;
+export default packageAppointmentController;

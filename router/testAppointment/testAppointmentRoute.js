@@ -1,20 +1,20 @@
 import express from "express";
-import testAppoinmentController from "../../controller/testAppointment/testAppointmentController.js";
-import testAppoinmentValidate from "../../validator/testAppointment/testAppointmentValidate.js";
+import testAppointmentController from "../../controller/testAppointment/testAppointmentController.js";
+import testAppointmentValidate from "../../validator/testAppointment/testAppointmentValidate.js";
 
 const route = express.Router();
 
 route.post(
   "/",
-  testAppoinmentValidate.createTestAppoinment,
-  testAppoinmentController.createTestAppoinment
+  testAppointmentValidate.createTestAppointment,
+  testAppointmentController.createTestAppointment
 );
-route.get("/:id?", testAppoinmentController.getTestAppoinment);
-route.delete("/:id", testAppoinmentController.deleteTestAppoinment);
+route.get("/:id?", testAppointmentController.getTestAppointment);
+route.delete("/:id", testAppointmentController.deleteTestAppointment);
 route.patch(
   "/:id",
-  testAppoinmentValidate.updateTestAppoinmentStatus,
-  testAppoinmentController.updateTestAppoinmentStatus
+  testAppointmentValidate.updateTestAppointmentStatus,
+  testAppointmentController.updateTestAppointmentStatus
 );
 
 export default route;

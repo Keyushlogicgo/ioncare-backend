@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
-import packageAppoinmentModel from "../../model/packageAppointment/packageAppointmentModel.js";
+import packageAppointmentModel from "../../model/packageAppointment/packageAppointmentModel.js";
 import { statusEnum } from "../../config/enum.js";
 import { inputPattern, validateMsg } from "../../helper/comman.js";
 
@@ -8,8 +8,8 @@ const options = {
   abortEarly: false,
 };
 
-class packageAppoinmentValidate {
-  static createPackageAppoinment = async (req, res, next) => {
+class packageAppointmentValidate {
+  static createPackageAppointment = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       start_time: Joi.string()
         .pattern(inputPattern.time)
@@ -40,7 +40,7 @@ class packageAppoinmentValidate {
       return validateResponse(res, error);
     } else {
       const { start_time, end_time, date, package_id } = req.body;
-      const result = await packageAppoinmentModel.findOne({
+      const result = await packageAppointmentModel.findOne({
         start_time: start_time,
         package_id: package_id,
         date: date,
@@ -51,7 +51,7 @@ class packageAppoinmentValidate {
           details: [
             {
               path: "date",
-              message: "sorry, Appoinment is already taken",
+              message: "sorry, Appointment is already taken",
             },
           ],
         };
@@ -61,7 +61,7 @@ class packageAppoinmentValidate {
       }
     }
   };
-  static updatePackageAppoinmentStatus = async (req, res, next) => {
+  static updatePackageAppointmentStatus = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       status: Joi.string()
         .valid(...statusEnum)
@@ -81,4 +81,4 @@ class packageAppoinmentValidate {
     }
   };
 }
-export default packageAppoinmentValidate;
+export default packageAppointmentValidate;
