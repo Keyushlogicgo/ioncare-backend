@@ -6,7 +6,6 @@ import cors from "cors";
 // Custom Item
 import { connectDb } from "./config/connectDb.js";
 import { tokenValidate } from "./middleware/tokenValidate.js";
-import { roleValidate } from "./middleware/roleValidate.js";
 
 // Router
 import * as route from "./router/index.js";
@@ -31,43 +30,26 @@ app.use(express.urlencoded());
 
 // Routes
 app.use(
-  "/api/v2/phlebotomist",
-  tokenValidate,
-  roleValidate,
-  route.phlebotomistRoute
-);
-app.use(
   "/api/v2/package-appointment",
   tokenValidate,
-  roleValidate,
-  route.packageAppoinmentRoute
-);
-app.use(
-  "/api/v2/test-appointment",
-  tokenValidate,
-  roleValidate,
-  route.testAppoinmentRoute
-);
-app.use(
-  "/api/v2/prescription",
-  tokenValidate,
-  roleValidate,
-  route.prescriptionRoute
+  route.packageAppointmentRoute
 );
 app.use(
   "/api/v2/prescription-image",
   tokenValidate,
-  roleValidate,
   route.prescriptionImageRoute
 );
-app.use("/api/v2/member", tokenValidate, roleValidate, route.memberRoute);
-app.use("/api/v2/test", tokenValidate, roleValidate, route.testRoute);
-app.use("/api/v2/package", tokenValidate, roleValidate, route.packageRoute);
-app.use("/api/v2/order", tokenValidate, roleValidate, route.orderRoute);
-app.use("/api/v2/payment", tokenValidate, roleValidate, route.paymentRoute);
-app.use("/api/v2/remark", tokenValidate, roleValidate, route.remarkRoute);
-app.use("/api/v2/rating", tokenValidate, roleValidate, route.ratingRoute);
-app.use("/api/v2/cart", tokenValidate, roleValidate, route.cartRoute);
+app.use("/api/v2/phlebotomist", tokenValidate, route.phlebotomistRoute);
+app.use("/api/v2/test-appointment", tokenValidate, route.testAppointmentRoute);
+app.use("/api/v2/prescription", tokenValidate, route.prescriptionRoute);
+app.use("/api/v2/member", tokenValidate, route.memberRoute);
+app.use("/api/v2/test", tokenValidate, route.testRoute);
+app.use("/api/v2/package", tokenValidate, route.packageRoute);
+app.use("/api/v2/order", tokenValidate, route.orderRoute);
+app.use("/api/v2/payment", tokenValidate, route.paymentRoute);
+app.use("/api/v2/remark", tokenValidate, route.remarkRoute);
+app.use("/api/v2/rating", tokenValidate, route.ratingRoute);
+app.use("/api/v2/cart", tokenValidate, route.cartRoute);
 app.use("/api/v2/auth", route.authRoute);
 
 // connect db

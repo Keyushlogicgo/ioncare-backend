@@ -1,6 +1,6 @@
 import express from "express";
-import packageAppoinmentController from "../../controller/packageAppoinment/packageAppoinmentController.js";
-import packageAppoinmentValidate from "../../validator/packageAppoinment/packageAppoinmentValidate.js";
+import packageAppoinmentController from "../../controller/packageAppointment/packageAppointmentController.js";
+import packageAppoinmentValidate from "../../validator/packageAppointment/packageAppointmentValidate.js";
 
 const route = express.Router();
 

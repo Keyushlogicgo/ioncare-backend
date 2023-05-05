@@ -1,12 +1,12 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import testAppoinmentModel from "../../model/testAppoinment/testAppoinmentModel.js";
+import testAppoinmentModel from "../../model/testAppointment/testAppointmentModel.js";
 import testModel from "../../model/test/testModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import orderModel from "../../model/order/orderModel.js";
 
 class testAppoinmentController {
-  static createtestAppoinment = async (req, res) => {
+  static createTestAppoinment = async (req, res) => {
     const { start_time, end_time, test_id, date, member_id, user_id } =
       req.body;
 
@@ -35,7 +35,7 @@ class testAppoinmentController {
       return errorResponse(res, 400, "error", error, "createtestAppoinment");
     }
   };
-  static gettestAppoinment = async (req, res) => {
+  static getTestAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
     const { user, date, status, member, phlebotomist } = req.query;
@@ -139,7 +139,7 @@ class testAppoinmentController {
       return errorResponse(res, 400, "error", error, "gettestAppoinment");
     }
   };
-  static deletetestAppoinment = async (req, res) => {
+  static deleteTestAppoinment = async (req, res) => {
     const { id } = req.params;
     try {
       await testAppoinmentModel.findByIdAndDelete(id);
@@ -148,7 +148,7 @@ class testAppoinmentController {
       return errorResponse(res, 400, "error", error, "deletetestAppoinment");
     }
   };
-  static updatetestAppoinmentStatus = async (req, res) => {
+  static updateTestAppoinmentStatus = async (req, res) => {
     const { id } = req.params;
     try {
       const result = await testAppoinmentModel.findByIdAndUpdate(

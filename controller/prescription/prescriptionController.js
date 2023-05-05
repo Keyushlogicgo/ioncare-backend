@@ -67,6 +67,9 @@ class prescriptionController {
           $skip: pagination.skip,
         },
       ]);
+      // const result = await prescriptionModel
+      //   .find()
+      //   .populate({ path: "images", select: "image -_id" });
       return successResponse(res, 200, "success", result, result.length);
     } catch (error) {
       return errorResponse(res, 400, "error", error, "getLabPackage");

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { errorResponse, successResponse } from "../../helper/apiResponse.js";
-import packageAppoinmentModel from "../../model/packageAppoinment/packageAppoinmentModel.js";
+import packageAppoinmentModel from "../../model/packageAppointment/packageAppointmentModel.js";
 import packageModel from "../../model/package/packageModel.js";
 import { paginationFun } from "../../helper/comman.js";
 import orderModel from "../../model/order/orderModel.js";
@@ -35,7 +35,14 @@ class packageAppoinmentController {
   static getPackageAppoinment = async (req, res) => {
     const { id } = req.params;
     const pagination = paginationFun(req.query);
-    const { test, user, date, status, member, phlebotomist } = req.query;
+    const {
+      test,
+      user,
+      date,
+      status,
+      member,
+      phlebotomist: phlebotomies,
+    } = req.query;
     try {
       var filter = { $match: {} };
       if (id) {
@@ -59,10 +66,10 @@ class packageAppoinmentController {
           member_id: new mongoose.Types.ObjectId(member),
         };
       }
-      if (phlebotomist) {
+      if (phlebotomies) {
         filter.$match = {
           ...filter.$match,
-          phlebotomist_id: new mongoose.Types.ObjectId(phlebotomist),
+          phlebotomist_id: new mongoose.Types.ObjectId(phlebotomies),
         };
       }
       if (date) {

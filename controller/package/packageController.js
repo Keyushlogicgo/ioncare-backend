@@ -15,6 +15,7 @@ class packageController {
       });
       const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
       const selling_price = totalPrice - totalPrice * (discount / 100);
+
       const imageUrl = await handleFile(image, "package");
       const doc = new packageModel({
         title: title,

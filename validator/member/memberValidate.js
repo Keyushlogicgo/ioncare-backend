@@ -69,6 +69,7 @@ class memberValidate {
         .messages(validateMsg(null, null, "string")),
       image: Joi.string()
         .label("image")
+        .required()
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);
@@ -154,6 +155,7 @@ class memberValidate {
         .messages(validateMsg(null, null, "string")),
       image: Joi.string()
         .label("image")
+        .empty()
         .messages(validateMsg(null, null, "string")),
     });
     const { error } = validateSchema.validate(req.body, options);

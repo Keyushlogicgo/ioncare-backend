@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const cartSchema = mongoose.Schema(
   {
     user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-    items: [{ type: mongoose.Schema.Types.ObjectId, required: true }],
+    items: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "test" },
+    ],
   },
   { timestamps: true }
 );

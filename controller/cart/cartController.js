@@ -51,7 +51,6 @@ class cartController {
         _id: { $in: items },
       });
       const totalPrice = priceData.reduce((sum, obj) => sum + obj.price, 0);
-
       const result = await cartModel.aggregate([
         {
           $match: {
@@ -89,6 +88,7 @@ class cartController {
           $skip: pagination.skip,
         },
       ]);
+
       return successResponse(res, 201, "success", result);
     } catch (error) {
       return errorResponse(res, 400, "error", error, "getCart");

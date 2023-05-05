@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { validateResponse } from "../../helper/apiResponse.js";
-import packageAppoinmentModel from "../../model/packageAppoinment/packageAppoinmentModel.js";
+import testAppoinmentModel from "../../model/testAppointment/testAppointmentModel.js";
 import { statusEnum } from "../../config/enum.js";
 import { inputPattern, validateMsg } from "../../helper/comman.js";
 
@@ -8,8 +8,8 @@ const options = {
   abortEarly: false,
 };
 
-class packageAppoinmentValidate {
-  static createPackageAppoinment = async (req, res, next) => {
+class testAppoinmentValidate {
+  static createTestAppoinment = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       start_time: Joi.string()
         .pattern(inputPattern.time)
@@ -26,10 +26,11 @@ class packageAppoinmentValidate {
         .required()
         .label("date")
         .messages(validateMsg(null, null, "string")),
-      package_id: Joi.string()
+      test_id: Joi.array()
         .required()
-        .label("package_id")
-        .messages(validateMsg(null, null, "string")),
+        .label("test_id")
+        .min(1)
+        .messages(validateMsg(1, null, "array")),
       member_id: Joi.string()
         .required()
         .label("member_id")
@@ -39,10 +40,9 @@ class packageAppoinmentValidate {
     if (error) {
       return validateResponse(res, error);
     } else {
-      const { start_time, end_time, date, package_id } = req.body;
-      const result = await packageAppoinmentModel.findOne({
+      const { start_time, end_time, date, test_id } = req.body;
+      const result = await testAppoinmentModel.findOne({
         start_time: start_time,
-        package_id: package_id,
         date: date,
         end_time: end_time,
       });
@@ -61,7 +61,7 @@ class packageAppoinmentValidate {
       }
     }
   };
-  static updatePackageAppoinmentStatus = async (req, res, next) => {
+  static updateTestAppoinmentStatus = async (req, res, next) => {
     const validateSchema = Joi.object().keys({
       status: Joi.string()
         .valid(...statusEnum)
@@ -81,4 +81,4 @@ class packageAppoinmentValidate {
     }
   };
 }
-export default packageAppoinmentValidate;
+export default testAppoinmentValidate;
